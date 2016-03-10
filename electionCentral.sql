@@ -28,7 +28,6 @@ CREATE TABLE voters(
 
 CREATE TABLE electionData(
 	election_id int,
-	test int,
 	name varchar(50),
 	location varchar(50),
 	start_date datetime, # YYYY-MM-DD HH:MI:SS
