@@ -9,12 +9,33 @@
 		<header>
 			<nav>
 				<ul class='main-nav'>
-					<li><a href='#'>Home</a></li>
-					<li>Register</li>
+					<li><a href='index.html'>Home</a></li>
+					<li><a href='#'>Register</a></li>
 				</ul>
 			</nav>
 		</header>
-		<form name='registerForm' method='post'>
-		</form>
+		<div class='form'>
+			<form name='registerForm' method='post'>
+				<div class='row'>
+					<label for='first'>First Name:</label>
+					<input type='text' name='first' maxlength='30' size='30' id='first'/>
+				</div>
+				<div class='row'>
+					<label for='last'>Last Name:</label>
+					<input type='text' name='last' maxlength='30' size='30' id='last'/>
+				</div>
+				<div class='row'>
+					<label for='username'>Username:</label>
+					<input type='text' name='username' id='username' size='25' maxlength='25'/>
+				</div>
+				<div class='row'>
+					<label for='ssn'>SSN:</label>
+					<input type='text' name='ssn' id='ssn' size='9'/>
+				</div>
+				<div class='row'>
+					<input type='submit' name='subBtn' value='Register'/>
+				</div>
+			</form>
+		</div>
 	</body>
 </html>
