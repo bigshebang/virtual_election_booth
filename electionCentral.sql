@@ -14,7 +14,7 @@ CREATE TABLE voters(
 	ssn varchar(11), # XXX-XX-XXXX
 	voter_id int,
 	username varchar(25),
-	password varchar(25),
+	password varchar(40),
 	firstname varchar(25),
 	lastname varchar(25),
 	birthday date, # YYYY-MM-DD
