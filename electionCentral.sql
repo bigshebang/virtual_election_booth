@@ -11,16 +11,16 @@ CREATE TABLE voterHistory(
 );
 
 CREATE TABLE voters(
-	ssn varchar(11), # XXX-XX-XXXX
+	ssn char(11), # XXX-XX-XXXX
 	voter_id int,
 	username varchar(25),
-	password varchar(40),
-	firstname varchar(25),
-	lastname varchar(25),
+	password char(128),
+	firstname varchar(50),
+	lastname varchar(50),
 	birthday date, # YYYY-MM-DD
 	address varchar(50),
 	phoneNumber varchar(12), # XXX-XXX-XXXX
-	politicalParty varchar(25),
+	politicalParty varchar(50),
 	isAdmin int(1) DEFAULT 0,
 	PRIMARY KEY (ssn)
 	# FOREIGN KEY (voter_id) REFERENCES voterHistory(voter_id) # says cant add FK.. dont know why
@@ -32,6 +32,6 @@ CREATE TABLE electionData(
 	location varchar(50),
 	start_date datetime, # YYYY-MM-DD HH:MI:SS
 	end_date datetime, # YYYY-MM-DD HH:MI:SS
-	position varchar(25),
+	position varchar(50),
 	FOREIGN KEY (election_id) REFERENCES voterHistory(election_id)
 );
