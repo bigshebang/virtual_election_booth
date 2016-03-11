@@ -23,7 +23,7 @@ CREATE TABLE voters(
 	politicalParty varchar(50),
 	isAdmin int(1) DEFAULT 0,
 	PRIMARY KEY (ssn)
-	# FOREIGN KEY (voter_id) REFERENCES voterHistory(voter_id) # says cant add FK.. dont know why
+	# FOREIGN KEY (voter_id) REFERENCES voterHistory(voterHistory.voter_id) # says cant add FK.. dont know why
 );
 
 CREATE TABLE electionData(
@@ -35,3 +35,8 @@ CREATE TABLE electionData(
 	position varchar(50),
 	FOREIGN KEY (election_id) REFERENCES voterHistory(election_id)
 );
+
+CREATE USER 'ec-dba'@'localhost' IDENTIFIED BY "mysql:Password!";
+GRANT SELECT,INSERT on ElectionCentral.* TO 'ed-dba'@'localhost';
+FLUSH PRIVILEGES;
+
