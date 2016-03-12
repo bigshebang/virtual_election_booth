@@ -13,7 +13,7 @@ CREATE TABLE voterHistory(
 CREATE TABLE voters(
 	ssn char(11), # XXX-XX-XXXX
 	voter_id int,
-	username varchar(25),
+	username varchar(50),
 	password char(128),
 	firstname varchar(50),
 	lastname varchar(50),
