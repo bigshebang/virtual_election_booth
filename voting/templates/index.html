@@ -10,23 +10,23 @@
 			<nav>
 				<ul class='main-nav'>
 					<li><a href='#'>Home</a></li>
-					<li><a href='vote.html'>Vote</a></li>
-					<li><a href='register.html'>Register</a></li>
+					<li><a href='vote'>Vote</a></li>
+					<li><a href='register'>Register</a></li>
 				</ul>
 			</nav>
 		</header>
 		<main>
 			<section>
-				<p>Welcome to Election Central! Please <a href='register.html'>register</a> or log in.</p>
+				<p>Welcome to Election Central! Please <a href='register'>register</a> or log in.</p>
 				<div class='form'>
-					<form name='loginForm' method='post'>
+					<form name='loginForm' method='post' action='/'>
 						<div class='row'>
 							<label for='username'>Username:</label>
-							<input type='text' name='username' id='username' size='25' maxlength='25'/>
+							<input type='text' name='username' id='username' size='25' maxlength='50' placeholder='username'/>
 						</div>
 						<div class='row'>
 							<label for='password'>Password:</label>
-							<input type='password' name='password' id='password' size='30' maxlength='30'/>
+							<input type='password' name='password' id='password' size='25' maxlength='100' placeholder='password'/>
 						</div>
 						<div class='row'>
 							<input type='submit' value='Login'/>

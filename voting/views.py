@@ -2,16 +2,17 @@ from flask import Flask, render_template, request, redirect, abort, session, Blu
 
 views = Blueprint('views', __name__)
 
-@views.route("/", methods=["GET", "POST"])
+@views.route("/", methods=["GET"])
 def home():
-	#return "Welcome to our voting web app!"
-	return render_template("index.html")
+	if request.method == "GET":
+		return render_template("index.html")
 
-#@views.route("/css/<file>")
-#def serveCSS():
-#	return render_template()
-
-@views.route("/about")
-def about():
-	return "This is a super duper secure voting web app"
+@views.route("/vote", methods=["GET", "POST"])
+def vote_page():
+	if request.method == "GET":
+		return render_template("vote.html")
+	elif request.method == "POST":
+		return render_template("vote.html")
+	else: #weird HTTP method we don't support
+		return render_template("index.html")
 

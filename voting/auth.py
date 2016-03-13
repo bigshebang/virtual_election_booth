@@ -2,15 +2,21 @@ from flask import Flask, render_template, request, redirect, abort, session, Blu
 
 auth = Blueprint('auth', __name__)
 
-@auth.route("/register")
-def register():
-	return "This is the registration page"
+@auth.route("/register", methods=["GET", "POST"])
+def register_page():
+	if request.method == "GET":
+		return render_template("register.html")
+	elif request.method == "POST":
+		return render_template("register.html")
+	else: #weird HTTP method we don't support
+		return render_template("index.html")
 
-@auth.route("/login")
+@auth.route("/", methods=["POST"])
 def login():
-	return "This is the login page"
+	return render_template("index.html")
 
 @auth.route("/logout")
 def logout():
-	return "This is the logout page"
+	#do logout stuff then send em back to home page
+	return render_template("index.html")
 
