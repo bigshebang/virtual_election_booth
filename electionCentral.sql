@@ -18,7 +18,7 @@ CREATE TABLE voters(
 	firstname varchar(50),
 	lastname varchar(50),
 	birthday date, # YYYY-MM-DD
-	address varchar(50),
+	address varchar(200),
 	phoneNumber varchar(12), # XXX-XXX-XXXX
 	politicalParty varchar(50),
 	isAdmin int(1) DEFAULT 0,
@@ -29,7 +29,7 @@ CREATE TABLE voters(
 CREATE TABLE electionData(
 	election_id int,
 	name varchar(50),
-	location varchar(50),
+	location varchar(100),
 	start_date datetime, # YYYY-MM-DD HH:MI:SS
 	end_date datetime, # YYYY-MM-DD HH:MI:SS
 	position varchar(50),
