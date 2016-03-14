@@ -37,6 +37,6 @@ CREATE TABLE electionData(
 );
 
 CREATE USER 'ec-dba'@'localhost' IDENTIFIED BY "mysql:Password!";
-GRANT SELECT,INSERT on ElectionCentral.* TO 'ed-dba'@'localhost';
+GRANT SELECT,INSERT on ElectionCentral.* TO 'ec-dba'@'localhost';
 FLUSH PRIVILEGES;
 
