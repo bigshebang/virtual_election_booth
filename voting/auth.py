@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, abort, session, Blueprint
 from flask.ext.mysqldb import MySQL
+from flask.ext.hashing import Hashing
 
 auth = Blueprint('auth', __name__)
 db = MySQL()
@@ -56,13 +57,13 @@ def login():
 	result = False
 	if not request.form['username']:
 		error = "Username must not be left blank."
-	elif not request.form['plainPass']:
+	elif not request.form['password']:
 		error = "Password must not be left blank."
 	else:
 		result = tryLogin(request.form)
 
 	if result:
-		return render_template("index.html")
+		return render_template("index.html", error="Valid login")
 	else:
 		if not error:
 			error = "Invalid username/password combination. Try again."
@@ -77,6 +78,7 @@ def logout():
 def registerUser(data):
 	#register user and return success or failure
 	#make data['password'] into hashed and salted version
+	data['password'] = hashPass(data['password'], data['username'])
 	#make data['birthday'] into proper format
 	#get cursor and add user to voters table
 	cur = db.connection.cursor()
@@ -86,10 +88,34 @@ def registerUser(data):
 				data['first'], data['last'], data['birthday'], data['address'], data['number'],
 				data['party']))
 	result = cur.fetchall()
-	return True
+	
+	if len(result) > 0:
+		return True
+	else:
+		return False
 
 def tryLogin(data):
-	return True
+	#hash password
+	password = hashPass(data['password'], data['username'])
+
+	#check db if this is a good user/pass combo
+	cur = db.connection.cursor()
+	cur.execute("SELECT * FROM voters WHERE username = %s AND password = %s",
+				(data['username'], password))
+	result = cur.fetchall()
+
+	if len(result) > 0:
+		return True
+	else:
+		return False
+
+def hashPass(plainPass, username):
+	#hash password through sha512 with 1 million rounds.
+	#static salt of 20 random characters, dynamic salt of the username
+	staticSalt = "r!6bCZ&2e7a28d6dfE0c"
+	shaHasher = Hashing()
+	h = shaHasher.hash_value(plainPass, salt=username+staticSalt)
+	return h
 
 #validate an SSN. return True if valid and False if not
 def validSSN(ssn):
