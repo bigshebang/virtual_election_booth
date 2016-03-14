@@ -62,9 +62,13 @@ def login():
 	else:
 		result = tryLogin(request.form)
 
-	if result:
+	if result: #valid login
+		session.regenerate()
+		#put real values here
+		session['username'] = "username"
+		session['id'] = "id"
 		return render_template("index.html", error="Valid login")
-	else:
+	else: #failed login
 		if not error:
 			error = "Invalid username/password combination. Try again."
 
@@ -72,8 +76,11 @@ def login():
 
 @auth.route("/logout")
 def logout():
-	#do logout stuff then send em back to home page
-	return render_template("index.html")
+	#clear session and put em back to the home page
+	if loggedIn():
+		session.clear()
+
+	return redirect("/")
 
 def registerUser(data):
 	#register user and return success or failure
@@ -116,6 +123,9 @@ def hashPass(plainPass, username):
 	shaHasher = Hashing()
 	h = shaHasher.hash_value(plainPass, salt=username+staticSalt)
 	return h
+
+def loggedIn():
+	return False
 
 #validate an SSN. return True if valid and False if not
 def validSSN(ssn):
