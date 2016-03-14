@@ -11,12 +11,18 @@ with open('.voting_secret_key', 'a+') as secret:
 
 ##### SERVER SETTINGS #####
 SECRET_KEY = key
-#SQLALCHEMY_DATABASE_URI = 'sqlite:///ctfd.db'
+#database settings
 #SQLALCHEMY_DATABASE_URI = 'mysql://ec-dba:mysql:Password!@localhost/ElectionCentral'
 MYSQL_HOST = "localhost"
 MYSQL_USER = "ec-dba"
 MYSQL_PASSWORD = "mysql:Password!"
 MYSQL_DB = "ElectionCentral"
+
+#for hashing
+HASHING_METHOD = "sha512"
+HASHING_ROUNDS = 1000000
+
+#other Flask  stuff
 SESSION_TYPE = "filesystem"
 SESSION_FILE_DIR = "/tmp/flask_session"
 SESSION_COOKIE_HTTPONLY = True
