@@ -81,9 +81,8 @@ def logout():
 		session.clear()
 
 	return redirect("/")
-
+#register user and return success or failure
 def registerUser(data):
-	#register user and return success or failure
 	#make data['password'] into hashed and salted version
 	data['password'] = hashPass(data['password'], data['username'])
 	#make data['birthday'] into proper format
@@ -134,11 +133,20 @@ def validSSN(ssn):
 	else:
 		return False
 
+#make sure username follows valid scheme and doesn't exist already
 def validUsername(user):
 	if user:
+		cur = db.connection.cursor()
+		cur.execute("SELECT username FROM voters WHERE username = %s", user)
+		results = cur.fetchall()
+
+		#if username exists in db, invalid registration
+		if len(results) > 0:
+			break
+
 		return True
-	else:
-		return False
+
+	return False
 
 def validPass(password):
 	if password:
