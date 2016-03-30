@@ -27,11 +27,30 @@ CREATE TABLE voters(
 );
 
 CREATE TABLE electionData(
+    election_id int,
+    candidate_id int,
+    num_votes int DEFAULT 0,
+	CONSTRAINT pk_electionData PRIMARY KEY (election_id, candidate_id)
+);
+
+CREATE TABLE elections(
 	election_id int,
 	name varchar(50),
 	location varchar(50),
 	start_date datetime, # YYYY-MM-DD HH:MI:SS
 	end_date datetime, # YYYY-MM-DD HH:MI:SS
 	position varchar(25),
-	FOREIGN KEY (election_id) REFERENCES voterHistory(election_id)
+	FOREIGN KEY (election_id) REFERENCES voterHistory(election_id),
+	FOREIGN KEY (election_id) REFERENCES electionData(election_id)
 );
+
+CREATE TABLE candidates(
+    ssn varchar(11), # XXX-XX-XXXX
+    candidate_id int,
+    firstname varchar(25),
+    lastname varchar(25),
+    politicalParty varchar(25),
+	PRIMARY KEY (ssn)
+    # FOREIGN KEY (candidate_id) REFERENCES electionData(candidate_id) # says cant add FK
+);
+
