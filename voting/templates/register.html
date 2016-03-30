@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel='stylesheet' type='text/css' href='css/style.css'/>
+		<title>Election Central Voter Registration</title>
+	</head>
+	<body>
+		<header>
+			<nav>
+				<ul class='main-nav'>
+					<li><a href='/'>Home</a></li>
+					<li><a href='#'>Register</a></li>
+				</ul>
+			</nav>
+		</header>
+		<div class='form'>
+			<form name='registerForm' method='post' action='register'>
+				<div class='row'>
+					<label for='first'>First Name:</label>
+					<input type='text' name='first' maxlength='50' size='30' id='first'/>
+				</div>
+				<div class='row'>
+					<label for='last'>Last Name:</label>
+					<input type='text' name='last' maxlength='50' size='30' id='last'/>
+				</div>
+				<div class='row'>
+					<label for='username'>Username:</label>
+					<input type='text' name='username' id='username' size='25' maxlength='50'/>
+				</div>
+				<div class='row'>
+					<label for='ssn'>SSN:</label>
+					<input type='text' name='ssn' id='ssn' size='11' maxlength='11'/>
+				</div>
+				<div class='row'>
+					<input type='submit' name='subBtn' value='Register'/>
+				</div>
+				{% if error %}
+				<div class='row'>
+					<span class='error'>{{ error }}</span>
+				</div>
+				{% endif %}
+			</form>
+		</div>
+	</body>
+</html>
