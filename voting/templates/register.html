@@ -1,5 +1,17 @@
 {% extends "layout.html" %}
 {% block title %}Election Central Voter Registration{% endblock %}
+{% block script %}
+	<script>
+		function sub(frm){
+			var bd = frm.elements['birthday'];
+			var year = frm.elements['year'];
+			var mon = frm.elements['month'];
+			var day = frm.elements['day'];
+			bd.value = year + '-' + mon + '-' + day;
+			frm.submit();
+		}
+	</script>
+{% endblock %}
 {% block home_active %}{% endblock %}
 {% block vote_active %}class='disable'{% endblock %}
 {% block regi_active %}class='active'{% endblock %}
@@ -23,7 +35,46 @@
 					<input type='text' name='ssn' id='ssn' size='11' maxlength='11'/>
 				</div>
 				<div class='row'>
-					<input type='submit' name='subBtn' value='Register'/>
+					<label for='birthday'>Birthday:</label>
+					<select name='year'>
+						{% for i in range(1900, 1999): %}
+						<option>{{ i }}</option>
+						{% endfor %}
+					</select>
+					<select name='month'>
+						{% for i in range(1,13): %}
+						<option>{{ i }}</option>
+						{% endfor %}
+					</select>
+					<select name='year'>
+						{% for i in range(1,31): %}
+						<option>{{ i }}</option>
+						{% endfor %}
+					</select>
+					<input type='hidden' name='birthday' id='birthday' size='10' maxlength='10'/>
+				</div>
+				<div class='row'>
+					<label for='address'>Address:</label>
+					<input type='text' name='address' id='ssn' size='25' maxlength='200'/>
+				</div>
+				<div class='row'>
+					<label for='party'>Political Party:</label>
+					<input type='text' name='party' id='party' size='25' maxlength='50'/>
+				</div>
+				<div class='row'>
+					<label for='number'>Phone Number (###-###-####):</label>
+					<input type='text' name='number' id='number' size='12' maxlength='12'/>
+				</div>
+				<div class='row'>
+					<label for='password'>Password:</label>
+					<input type='password' name='password' id='password' size='20' maxlength='50'/>
+				</div>
+				<div class='row'>
+					<label for='password2'>Re-Type Password:</label>
+					<input type='password' name='password2' id='password2' size='20' maxlength='50'/>
+				</div>
+				<div class='row'>
+					<input type='button' name='subBtn' value='Register' onclick='sub(document.registerForm)'/>
 				</div>
 				{% if error %}
 				<div class='row'>
