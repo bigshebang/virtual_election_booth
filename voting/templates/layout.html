@@ -4,12 +4,13 @@
 		<meta charset="utf-8" />
 		<link rel='stylesheet' type='text/css' href='css/style.css'>
 		<title>{% block title %}{% endblock %}</title>
+		{% block script %}{% endblock %}
 	</head>
 	<body>
 		<header>
 			<nav>
 				<ul class='main-nav'>
-					<li {% block home_active %}{% endblock %}><a href='index'>Home</a></li>
+					<li {% block home_active %}{% endblock %}><a href='/'>Home</a></li>
 					<li {% block vote_active %}{% endblock %}><a href='vote'>Vote</a></li>
 					<li {% block regi_active %}{% endblock %}><a href='register'>Register</a></li>
 					{% if show_results %}
