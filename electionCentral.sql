@@ -23,7 +23,6 @@ CREATE TABLE voters(
 	politicalParty varchar(50),
 	isAdmin int(1) DEFAULT 0,
 	PRIMARY KEY (ssn)
-	# FOREIGN KEY (voter_id) REFERENCES voterHistory(voter_id) # says cant add FK.. dont know why
 );
 
 CREATE TABLE electionData(
@@ -51,7 +50,6 @@ CREATE TABLE candidates(
     lastname varchar(25),
     politicalParty varchar(25),
 	PRIMARY KEY (ssn)
-    # FOREIGN KEY (candidate_id) REFERENCES electionData(candidate_id) # says cant add FK
 );
 
 CREATE USER 'ec-dba'@'localhost' IDENTIFIED BY "mysql:Password!";
