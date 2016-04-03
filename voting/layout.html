@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel='stylesheet' type='text/css' href='style.css'>
+		<title>{% block title %}{% endblock %}</title>
+	</head>
+	<body>
+		<header>
+			<nav>
+				<ul class='main-nav'>
+					<li {% block home_active %}{% endblock %}><a href='index'>Home</a></li>
+					<li {% block vote_active %}{% endblock %}><a href='vote'>Vote</a></li>
+					<li {% block regi_active %}{% endblock %}><a href='register'>Register</a></li>
+					{% if show_results() %}
+					<li {% block end_active %}{% endblock %}><a href='election'>Election Results</a></li>
+					{% endif %}
+				</ul>
+			</nav>
+		</header>
+		<main>
+			{% block content %}
+			{% endblock %}
+		</main>
+	</body>
+</html>
