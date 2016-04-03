@@ -1,3 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-</html>
+{% extends "layout.html" %}
+{% block title %}Election Central Results{% endblock %}
+{% block home-active %}{% endblock %}
+{% block vote-active %}{% endblock %}
+{% block regi-active %}{% endblock %}
+{% block end-active %}class='active'{% endblock %}
+{% block content %}
+	<table>
+		<tr>
+			<th>Candidate</th>
+			<th>Votes Received</th>
+		</tr>
+	{% for candidate, total in results: %}
+	<tr>
+		<td>{{ candidate }}</td>
+		<td>{{ total }}</td>
+	</tr>
+	{% endfor %}
+	</table>
+{% endblock %}

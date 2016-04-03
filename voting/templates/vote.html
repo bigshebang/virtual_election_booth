@@ -1,25 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel='stylesheet' type='text/css' href='css/style.css'/>
-		<title>Election Central Ballot</title>
-	</head>
-	<body>
-		<header>
-			<nav>
-				<ul class='main-nav'>
-					<li><a href='/'>Home</a></li>
-					<li><a href='#'>Vote</a></li>
-				</ul>
-			</nav>
-		</header>
+{% extends "layout.html" %}
+{% block title %}Election Central Ballot{% endblock %}
+{% block home-active %}{% endblock %}
+{% block vote-active %}class='active'{% endblock %}
+{% block regi-active %}class='disable'{% endblock %}
+{% block content %}
 		<form name='voteForm' method='post'>
 			<h1>Select one (1) candidate from the following:</h1>
-			<input type='radio' name='candidate' id='candidate1'>
-			<label for='candidate1'>Candidate 1</label>
-			<input type='radio' name='candidate' id='candidate2'>
-			<label for='candidate2'>Candidate 2</label>
+			{% for i in range (0, len(candidates)): %}
+			<input type='radio' name='candidate' id='candidate{{ i }}'>
+			<label for='candidate{{ i }}'>{{ candidates[i] }}</label>
+			{% endfor %}
 		</form>
-	</body>
-</html>
+{% endblock %}
