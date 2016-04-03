@@ -9,11 +9,11 @@
 		<header>
 			<nav>
 				<ul class='main-nav'>
-					<li {% block home-active %}{% endblock %><a href='index'>Home</a></li>
-					<li {% block vote-active %}{% endblock %}><a href='vote'>Vote</a></li>
-					<li {% block regi-active %}{% endblock %}><a href='register'>Register</a></li>
+					<li {% block home_active %}{% endblock %><a href='index'>Home</a></li>
+					<li {% block vote_active %}{% endblock %}><a href='vote'>Vote</a></li>
+					<li {% block regi_active %}{% endblock %}><a href='register'>Register</a></li>
 					{% if show_results() %}
-					<li {% block end-active %}{% endblock %}><a href='election'>Election Results</a></li>
+					<li {% block end_active %}{% endblock %}><a href='election'>Election Results</a></li>
 					{% endif %}
 				</ul>
 			</nav>
