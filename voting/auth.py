@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, abort, session, Blu
 from flask.ext.mysqldb import MySQL
 from flask.ext.hashing import Hashing
 import re
-from voting.utils import loggedIn
+from voting.utils import loggedIn, getCurElection
 
 auth = Blueprint('auth', __name__)
 db = MySQL()
