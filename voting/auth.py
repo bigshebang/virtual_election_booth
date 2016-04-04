@@ -146,6 +146,7 @@ def validSSN(ssn):
 	if ssn:
 		if re.match("^\d{3}-\d{2}-\d{4}$", ssn): # XXX-XX-XXXX
 			return True
+
 	return False
 
 #what is our policy for this? letters, numbers, underscores and dashes?
@@ -163,14 +164,15 @@ def validPass(password):
 		return False
 
 def validFirst(first):
-    if re.match("^[A-Za-z.-']+$", first): # matches upper, lower, whitespace, and dashes 
-        return True
-    return False
+	if re.match("^[A-Za-z.-']+$", first): # matches upper, lower, whitespace, and dashes 
+		return True
+
+	return False
 
 def validLast(last):
-    if re.match("^[A-Za-z.-']+$", last): # matches upper, lower, whitespace, and dashes 
-        return True
-    return False
+	if re.match("^[A-Za-z.-']+$", last): # matches upper, lower, whitespace, and dashes 
+		return True
+	return False
 
 def validAddress(address):
 	if address:
