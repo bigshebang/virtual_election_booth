@@ -9,6 +9,10 @@ db = MySQL()
 
 @auth.route("/register", methods=["GET", "POST"])
 def register_page():
+	#if user is logged in already, just send them to the home page
+	if loggedIn():
+		return redirect("/")
+
 	#make sure user isn't logged in already before processing registration
 	if request.method == "GET":
 		return render_template("register.html")
