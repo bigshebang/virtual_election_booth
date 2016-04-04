@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, abort, session, Blueprint
 from flask.ext.mysqldb import MySQL
 from flask.ext.hashing import Hashing
+import re
 
 auth = Blueprint('auth', __name__)
 db = MySQL()
@@ -29,7 +30,7 @@ def register_page():
 			error = "You must supply a valid date of birth."
 		elif not validAddress(request.form['address']): #we should prob separate this into separate fields like city, state, zip
 			error = "You must supply a valid address."
-		elif not validNumber(request.form['number']):
+		elif not validPhoneNumber(request.form['number']):
 			error = "You must supply a valid phone number."
 		elif not validParty(request.form['party']):
 			error = "You must supply a valid political party."
@@ -129,11 +130,11 @@ def loggedIn():
 
 #validate an SSN. return True if valid and False if not
 def validSSN(ssn):
-	if ssn:
-		return True
-	else:
-		return False
+    if re.match("^\d{3}-?\d{2}-?\d{4}$", ssn): # XXX-XX-XXXX
+        return True
+    return False
 
+# whats the criteria for valid username? just if it doesnt already exist? - jimmy 
 def validUsername(user):
 	if user:
 		return True
@@ -165,17 +166,15 @@ def validAddress(address):
 	else:
 		return False
 
-def validNumber(number):
-	if number:
-		return True
-	else:
-		return False
+def validPhoneNumber(number):
+    if re.match("^\d{3}-?\d{3}-?\d{4}$", number): # XXX-XXX-XXXX
+        return True
+    return False
 
 def validBirthday(dob):
-	if dob:
-		return True
-	else:
-		return False
+    if re.match("^\d{4}-?\d{2}-?\d{2}$", number): # YYYY-MM-DD
+        return True
+    return False
 
 def validParty(party):
 	if party:
