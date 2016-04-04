@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, abort, session, Blueprint
 from flask.ext.mysqldb import MySQL
 from flask.ext.hashing import Hashing
-import re
 
 auth = Blueprint('auth', __name__)
 db = MySQL()
@@ -30,7 +29,7 @@ def register_page():
 			error = "You must supply a valid date of birth."
 		elif not validAddress(request.form['address']): #we should prob separate this into separate fields like city, state, zip
 			error = "You must supply a valid address."
-		elif not validPhoneNumber(request.form['number']):
+		elif not validNumber(request.form['number']):
 			error = "You must supply a valid phone number."
 		elif not validParty(request.form['party']):
 			error = "You must supply a valid political party."
@@ -52,22 +51,29 @@ def register_page():
 @auth.route("/", methods=["POST"])
 def login():
 	#if user is logged in already, just send them to the home page
+	if loggedIn():
+		return redirect("/")
 
 	#validate POST data
 	error = None
 	result = False
-	if not request.form['username']:
+	if not request.form["username"]:
 		error = "Username must not be left blank."
-	elif not request.form['password']:
+	elif not request.form["password"]:
 		error = "Password must not be left blank."
 	else:
 		result = tryLogin(request.form)
 
 	if result: #valid login
-		session.regenerate()
-		#put real values here
-		session['username'] = "username"
-		session['id'] = "id"
+		session.regenerate() #might need to wrap this in a try block
+
+		#put username and other data into session
+		session["username"] = request.form["username"]
+		userData = getUserData(session["username"])
+		session["id"] = "id"
+		session["firstname"] = "first"
+		session["lastname"] = "last"
+		
 		return render_template("index.html", error="Valid login")
 	else: #failed login
 		if not error:
@@ -85,14 +91,14 @@ def logout():
 
 def registerUser(data):
 	#register user and return success or failure
-	#make data['password'] into hashed and salted version
-	data['password'] = hashPass(data['password'], data['username'])
+	#make password the hashed and salted version
+	password = hashPass(data['password'], data['username'])
 	#make data['birthday'] into proper format
 	#get cursor and add user to voters table
 	cur = db.connection.cursor()
 	cur.execute("INSERT INTO voters (ssn, username, password, firstname, lastname, birthday, " +
 				"address, phoneNumber, politicalParty) VALUES ('%s', '%s', '%s', '%s', '%s', " +
-				"'%s', '%s', '%s', '%s')", (data['ssn'], data['username'], data['password'],
+				"'%s', '%s', '%s', '%s')", (data['ssn'], data['username'], password,
 				data['first'], data['last'], data['birthday'], data['address'], data['number'],
 				data['party']))
 	result = cur.fetchall()
@@ -125,16 +131,22 @@ def hashPass(plainPass, username):
 	h = shaHasher.hash_value(plainPass, salt=username+staticSalt)
 	return h
 
+#get certain user data and return in a dictionary
+def getUserData():
+	data = {}
+	#make some mysql queries so we can get the id/ssn, firstname, lastname.
+	return data
+
 def loggedIn():
-	return False
+	return return bool(session.get('id', False))
 
 #validate an SSN. return True if valid and False if not
 def validSSN(ssn):
-    if re.match("^\d{3}-?\d{2}-?\d{4}$", ssn): # XXX-XX-XXXX
-        return True
-    return False
+	if ssn:
+		return True
+	else:
+		return False
 
-# whats the criteria for valid username? just if it doesnt already exist? - jimmy 
 def validUsername(user):
 	if user:
 		return True
@@ -166,15 +178,17 @@ def validAddress(address):
 	else:
 		return False
 
-def validPhoneNumber(number):
-    if re.match("^\d{3}-?\d{3}-?\d{4}$", number): # XXX-XXX-XXXX
-        return True
-    return False
+def validNumber(number):
+	if number:
+		return True
+	else:
+		return False
 
 def validBirthday(dob):
-    if re.match("^\d{4}-?\d{2}-?\d{2}$", number): # YYYY-MM-DD
-        return True
-    return False
+	if dob:
+		return True
+	else:
+		return False
 
 def validParty(party):
 	if party:
