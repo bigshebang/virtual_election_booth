@@ -133,7 +133,7 @@ def hashPass(plainPass, username):
 	return h
 
 #get certain user data and return in a dictionary
-def getUserData():
+def getUserData(username):
 	data = {}
 	#make some mysql queries so we can get the id/ssn, firstname, lastname.
 	return data
@@ -162,12 +162,12 @@ def validPass(password):
 		return False
 
 def validFirst(first):
-    if re.match("^[A-Za-z.\s-]+$", number): # matches upper, lower, whitespace, and dashes 
+    if re.match("^[A-Za-z.-']+$", first): # matches upper, lower, whitespace, and dashes 
         return True
     return False
 
 def validLast(last):
-    if re.match("^[A-Za-z.\s-]+$", number): # matches upper, lower, whitespace, and dashes 
+    if re.match("^[A-Za-z.-']+$", last): # matches upper, lower, whitespace, and dashes 
         return True
     return False
 
