@@ -149,16 +149,14 @@ def validPass(password):
 		return False
 
 def validFirst(first):
-	if first:
-		return True
-	else:
-		return False
+    if re.match("^[A-Za-z.\s-]+$", number): # matches upper, lower, whitespace, and dashes 
+        return True
+    return False
 
 def validLast(last):
-	if last:
-		return True
-	else:
-		return False
+    if re.match("^[A-Za-z.\s-]+$", number): # matches upper, lower, whitespace, and dashes 
+        return True
+    return False
 
 def validAddress(address):
 	if address:
