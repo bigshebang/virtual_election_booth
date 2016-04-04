@@ -144,10 +144,11 @@ def loggedIn():
 #validate an SSN. return True if valid and False if not
 def validSSN(ssn):
 	if ssn:
-		if re.match("^\d{3}-?\d{2}-?\d{4}$", ssn): # XXX-XX-XXXX
+		if re.match("^\d{3}-\d{2}-\d{4}$", ssn): # XXX-XX-XXXX
 			return True
 	return False
 
+#what is our policy for this? letters, numbers, underscores and dashes?
 def validUsername(user):
 	if user:
 		return True
@@ -179,14 +180,16 @@ def validAddress(address):
 
 def validPhoneNumber(number):
 	if number:
-		if re.match("^\d{3}-?\d{3}-?\d{4}$", number): # XXX-XXX-XXXX
+		if re.match("^\d{3}-\d{3}-\d{4}$", number): # XXX-XXX-XXXX
 			return True
 
 	return False
 
 def validBirthday(dob):
 	if dob:
-		if re.match("^\d{4}-?\d{2}-?\d{2}$", number): # YYYY-MM-DD
+		#we also need to find some module to verify that the birthday is 
+		#18 or more years ago and that it's a valid date in general
+		if re.match("^\d{4}-\d{2}-\d{2}$", number): # YYYY-MM-DD
 			return True
 
 	return False
