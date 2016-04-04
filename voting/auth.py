@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, abort, session, Blu
 from flask.ext.mysqldb import MySQL
 from flask.ext.hashing import Hashing
 import re
+from voting.utils import loggedIn
 
 auth = Blueprint('auth', __name__)
 db = MySQL()
@@ -28,7 +29,7 @@ def register_page():
 			error = "You must supply a valid last name."
 		elif not validBirthday(request.form['birthday']):
 			error = "You must supply a valid date of birth."
-		elif not validAddress(request.form['address']): #we should prob separate this into separate fields like city, state, zip
+		elif not validAddress(request.form['address']):
 			error = "You must supply a valid address."
 		elif not validPhoneNumber(request.form['number']):
 			error = "You must supply a valid phone number."
@@ -39,9 +40,12 @@ def register_page():
 		else:
 			result = registerUser(request.form)
 
+		#successful registration
 		if result:
-			return render_template("index.html")
-		else:
+			#setup session and bring em back to the home page
+			setupSession(request.form["username"])
+			return redirect("/")
+		else: #failed registration
 			if not error:
 				error = "Registration failed. Please try again."
 
@@ -66,14 +70,8 @@ def login():
 		result = tryLogin(request.form)
 
 	if result: #valid login
-		session.regenerate() #might need to wrap this in a try block
-
-		#put username and other data into session
-		session["username"] = request.form["username"]
-		userData = getUserData(session["username"])
-		session["id"] = "id"
-		session["firstname"] = "first"
-		session["lastname"] = "last"
+		#get and setup various session data
+		setupSession(request.form["username"])
 		
 		return render_template("index.html", error="Valid login")
 	else: #failed login
@@ -132,14 +130,22 @@ def hashPass(plainPass, username):
 	h = shaHasher.hash_value(plainPass, salt=username+staticSalt)
 	return h
 
+#get data about the given user and put it into the session data
+def setupSession(username):
+	session.regenerate() #might need to wrap this in a try block
+
+	#put username and other data into session
+	session["username"] = request.form["username"]
+	userData = getUserData(session["username"])
+	session["id"] = userData["id"]
+	session["firstname"] = userData["first"]
+	session["lastname"] = userData["last"]
+
 #get certain user data and return in a dictionary
 def getUserData(username):
 	data = {}
 	#make some mysql queries so we can get the id/ssn, firstname, lastname.
 	return data
-
-def loggedIn():
-	return return bool(session.get('id', False))
 
 #validate an SSN. return True if valid and False if not
 def validSSN(ssn):
@@ -172,6 +178,7 @@ def validFirst(first):
 def validLast(last):
 	if re.match("^[A-Za-z.-']+$", last): # matches upper, lower, whitespace, and dashes 
 		return True
+
 	return False
 
 def validAddress(address):

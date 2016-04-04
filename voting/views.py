@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, abort, session, Blueprint
+from voting.utils import loggedIn
 
 views = Blueprint('views', __name__)
 
@@ -10,8 +11,18 @@ def home():
 @views.route("/election", methods=["GET"])
 def election_page():
 	curElection = getCurElection()
-	candidates = getCandidates(curElection)
-	return render_template("election.html", results=[("", 5)])
+	if curElection:
+		candidates = getCandidates(curElection) #get candidates in election
+
+		#get votes for each candidate
+		votes = ()
+		for c in candidates:
+			votes.append(getCandidateVotes(c))
+
+		voted, notVoted = getVoters(curElection)
+		return render_template("election.html", results=[candidates, votes], voted=voted, notVoted=notVoted)
+	else: #no election today, return to home page
+		return redirect("/")
 
 @views.route("/vote", methods=["GET", "POST"])
 def vote_page():
@@ -35,5 +46,13 @@ def getCurElection():
 	return ""
 
 #return a list of the candidates running in the given election
-def getCandidates(curElection):
+def getCandidates(election):
 	return []
+
+def getCandidateVotes(candidate):
+	return []
+
+#get who did and did not vote in the given election
+#this should be sorted alphabetically
+def getVoters(election):
+	return [], []
