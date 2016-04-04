@@ -13,11 +13,11 @@ def register_page():
 	if loggedIn():
 		return redirect("/")
 
-	#make sure user isn't logged in already before processing registration
-	if request.method == "GET":
-		return render_template("register.html")
-	elif request.method == "POST":
+	curElection = getCurElection() #get today's election
 
+	if request.method == "GET":
+		return render_template("register.html", logged_in=False, show_results=curElection)
+	elif request.method == "POST":
 		#validate POST data
 		error = None
 		result = False
@@ -44,7 +44,7 @@ def register_page():
 		else:
 			result = registerUser(request.form)
 
-		#successful registration
+		#if successful registration
 		if result:
 			#setup session and bring em back to the home page
 			setupSession(request.form["username"])
@@ -53,15 +53,15 @@ def register_page():
 			if not error:
 				error = "Registration failed. Please try again."
 
-			return render_template("register.html", error=error)
-	else: #weird HTTP method we don't support -- will we even get here?
-		return render_template("index.html")
+			return render_template("register.html", error=error, logged_in=False, show_results=curElection)
 
 @auth.route("/", methods=["POST"])
 def login():
 	#if user is logged in already, just send them to the home page
 	if loggedIn():
 		return redirect("/")
+
+	curElection = getCurElection() #get today's election
 
 	#validate POST data
 	error = None
@@ -77,12 +77,12 @@ def login():
 		#get and setup various session data
 		setupSession(request.form["username"])
 		
-		return render_template("index.html", error="Valid login")
+		return render_template("index.html", logged_in=True, show_results=curElection)
 	else: #failed login
 		if not error:
 			error = "Invalid username/password combination. Try again."
 
-		return render_template("index.html", error=error)
+		return render_template("index.html", error=error, logged_in=False, show_results=curElection)
 
 @auth.route("/logout")
 def logout():
@@ -94,9 +94,9 @@ def logout():
 
 def registerUser(data):
 	#register user and return success or failure
-	#make password the hashed and salted version
-	password = hashPass(data['password'], data['username'])
-	#make data['birthday'] into proper format
+	password = hashPass(data['password'], data['username']) #hash and salt password
+	#make data['birthday'] into proper format?
+
 	#get cursor and add user to voters table
 	cur = db.connection.cursor()
 	cur.execute("INSERT INTO voters (ssn, username, password, firstname, lastname, birthday, " +
