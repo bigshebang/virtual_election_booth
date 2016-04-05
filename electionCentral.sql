@@ -26,9 +26,9 @@ CREATE TABLE voters(
 );
 
 CREATE TABLE electionData(
-    election_id int,
-    candidate_id int,
-    num_votes int DEFAULT 0,
+	election_id int,
+	candidate_id int,
+	num_votes int DEFAULT 0,
 	CONSTRAINT pk_electionData PRIMARY KEY (election_id, candidate_id)
 );
 
@@ -44,11 +44,11 @@ CREATE TABLE elections(
 );
 
 CREATE TABLE candidates(
-    ssn varchar(11), # XXX-XX-XXXX
-    candidate_id int,
-    firstname varchar(25),
-    lastname varchar(25),
-    politicalParty varchar(25),
+	ssn varchar(11), # XXX-XX-XXXX
+	candidate_id int,
+	firstname varchar(25),
+	lastname varchar(25),
+	politicalParty varchar(25),
 	PRIMARY KEY (ssn)
 );
 
