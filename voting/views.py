@@ -43,22 +43,52 @@ def vote_page():
 		if curElection:
 			candidates = getCandidates(curElection)
 
-			vote()
+			candidate = request.form["candidate"][-1] #get the candidate temp ID
+
+			#if candidate id is out of bounds for this election then this is a malicious voting
+			#attempt. don't count the vote, but record the invalid vote.
+			if candidate >= len(candidates):
+				vote(curElection, voted=False)
+			else:
+				vote(curElection, candidate=candidates[candidate])
 
 			return render_template("vote.html", logged_in=True, voted=True, show_results=True)
 
 	#there is no election today
 	return render_template("vote.html", logged_in=True, show_results=False)
 
-#given an election and candidate ID from that election, return the real candidate ID
-def getRealCandidateID():
-	return ""
+#get the current time in mysql datetime format - YYYY-MM-DD HH:MI:SS
+def getCurTime():
+	return "2016-04-25 10:00:00"
 
-#perform the vote by updating database
-def vote():
-	return ""
+#perform the vote by updating database. return true if successful, false if not
+def vote(election, candidate=None, voted=True):
+	#when we create an election, we need to create the corresponding rows in electionData
+	#because this function will assume they're just there
+
+	#verify that the election is still active
+	curTime = getCurTime()
+	if not electionActive(election, curTime):
+		return False
+
+	#update mysql db
+	#WE NEED to use a mutex or lock so that only one process can ever perform this update on the db
+	if voted:
+		#update electionData by adding 1 to the vote count for the given condition and add voter
+		#to the voterHistory table with the proper data
+		pass
+	else: #failed vote
+		#add the
+		pass
+
+	return False
+
+#given an election and current time, see if that election is still active
+def electionActive(election, curTime):
+	return True
 
 #return a list of the candidates running in the given election
+#this MUST be ordered alphabetically by first name
 def getCandidates(election):
 	return []
 
