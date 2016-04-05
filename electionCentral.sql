@@ -7,6 +7,7 @@ CREATE TABLE voterHistory(
 	election_id int,
 	voter_id int,
 	time_stamp datetime,
+	voted bit(1) DEFAULT 1,
 	CONSTRAINT pk_vote_id PRIMARY KEY (election_id, voter_id)
 );
 
