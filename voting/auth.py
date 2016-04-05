@@ -96,7 +96,6 @@ def logout():
 def registerUser(data):
 	#register user and return success or failure
 	password = hashPass(data['password'], data['username']) #hash and salt password
-	#make data['birthday'] into proper format?
 
 	#get cursor and add user to voters table
 	cur = db.connection.cursor()
@@ -106,7 +105,7 @@ def registerUser(data):
 				data['first'], data['last'], data['birthday'], data['address'], data['number'],
 				data['party']))
 	result = cur.fetchall()
-	
+
 	if len(result) > 0:
 		return True
 	else:
