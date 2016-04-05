@@ -47,9 +47,9 @@ CREATE TABLE elections(
 CREATE TABLE candidates(
 	ssn varchar(11), # XXX-XX-XXXX
 	candidate_id int,
-	firstname varchar(25),
-	lastname varchar(25),
-	politicalParty varchar(25),
+	firstname varchar(50),
+	lastname varchar(50),
+	politicalParty varchar(100),
 	PRIMARY KEY (ssn)
 );
 
