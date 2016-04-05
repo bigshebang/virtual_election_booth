@@ -47,7 +47,8 @@ def register_page():
 		#if successful registration
 		if result:
 			#setup session and bring em back to the home page
-			setupSession(request.form["username"])
+			setupSession(request.form["username"], ssn=request.form["ssn"],
+						 first=request.form["first"], last=request.form["last"])
 			return redirect("/")
 		else: #failed registration
 			if not error:
@@ -111,6 +112,7 @@ def registerUser(data):
 	else:
 		return False
 
+#try to login a user given their username and password
 def tryLogin(data):
 	#hash password
 	password = hashPass(data['password'], data['username'])
@@ -126,6 +128,8 @@ def tryLogin(data):
 	else:
 		return False
 
+#hash password with a static salt and dynamic salt of the username
+#use sha512 with 1,000,000 rounds for the securities
 def hashPass(plainPass, username):
 	#hash password through sha512 with 1 million rounds.
 	#static salt of 20 random characters, dynamic salt of the username
@@ -135,12 +139,19 @@ def hashPass(plainPass, username):
 	return h
 
 #get data about the given user and put it into the session data
-def setupSession(username):
+def setupSession(username, ssn=None, first=None, last=None):
 	session.regenerate() #might need to wrap this in a try block
 
 	#put username and other data into session
-	session["username"] = request.form["username"]
-	userData = getUserData(session["username"])
+	session["username"] = username
+	if ssn and first and last:
+		userData = {}
+		userData["id"] = ssn
+		userData["first"] = first
+		userData["last"] = last
+	else:
+		userData = getUserData(session["username"])
+
 	session["id"] = userData["id"]
 	session["firstname"] = userData["first"]
 	session["lastname"] = userData["last"]
@@ -152,6 +163,8 @@ def getUserData(username):
 	return data
 
 #validate an SSN. return True if valid and False if not
+#should we do a check to make sure the SSN isn't a duplicate? this way we can tell the user
+#otherwise we have no way of really knowing since we won't get a message from the db call
 def validSSN(ssn):
 	if ssn:
 		if re.match("^\d{3}-\d{2}-\d{4}$", ssn): # XXX-XX-XXXX
@@ -159,7 +172,8 @@ def validSSN(ssn):
 
 	return False
 
-#what is our policy for this? letters, numbers, underscores and dashes?
+#what is our policy for this? letters, numbers. then one underscore and/or dash?
+#also do a database check to make sure the username isn't taken
 def validUsername(user):
 	if user:
 		return True
@@ -173,24 +187,28 @@ def validPass(password):
 	else:
 		return False
 
+#make sure first name is valid (letters, dashes, apostrophes)
 def validFirst(first):
 	if re.match("^[A-Za-z.-']+$", first): # matches upper, lower, whitespace, and dashes 
 		return True
 
 	return False
 
+#make sure last name is valid (letters, dashes, apostrophes)
 def validLast(last):
 	if re.match("^[A-Za-z.-']+$", last): # matches upper, lower, whitespace, and dashes 
 		return True
 
 	return False
 
+#make sure the address consists of letters, numbers and spaces
 def validAddress(address):
 	if address:
 		return True
 	else:
 		return False
 
+#make sure phone number is in the valid XXX-XXX-XXXX format
 def validPhoneNumber(number):
 	if number:
 		if re.match("^\d{3}-\d{3}-\d{4}$", number): # XXX-XXX-XXXX
@@ -198,6 +216,8 @@ def validPhoneNumber(number):
 
 	return False
 
+#make sure birthday is valid date that is at least 18 years ago from today
+#also validate that it's in YYYY-MM-DD format
 def validBirthday(dob):
 	if dob:
 		#we also need to find some module to verify that the birthday is 
@@ -207,6 +227,8 @@ def validBirthday(dob):
 
 	return False
 
+#make sure the party isn't blank
+#do we need to check for anything else really? I guess it should be numbers, letters and spaces
 def validParty(party):
 	if party:
 		return True
