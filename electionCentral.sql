@@ -21,7 +21,7 @@ CREATE TABLE voters(
 	birthday date, # YYYY-MM-DD
 	address varchar(200),
 	phoneNumber varchar(12), # XXX-XXX-XXXX
-	politicalParty varchar(50),
+	politicalParty varchar(100),
 	isAdmin int(1) DEFAULT 0,
 	PRIMARY KEY (ssn)
 );
@@ -39,13 +39,13 @@ CREATE TABLE elections(
 	location varchar(100),
 	start_date datetime, # YYYY-MM-DD HH:MI:SS
 	end_date datetime, # YYYY-MM-DD HH:MI:SS
-	position varchar(25),
+	position varchar(50),
 	FOREIGN KEY (election_id) REFERENCES voterHistory(election_id),
 	FOREIGN KEY (election_id) REFERENCES electionData(election_id)
 );
 
 CREATE TABLE candidates(
-	ssn varchar(11), # XXX-XX-XXXX
+	ssn char(11), # XXX-XX-XXXX
 	candidate_id int,
 	firstname varchar(50),
 	lastname varchar(50),
