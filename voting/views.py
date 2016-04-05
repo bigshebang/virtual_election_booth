@@ -43,10 +43,16 @@ def vote_page():
 		if curElection:
 			candidates = getCandidates(curElection)
 
+			vote()
+
 			return render_template("vote.html", logged_in=True, voted=True, show_results=True)
 
 	#there is no election today
 	return render_template("vote.html", logged_in=True, show_results=False)
+
+#given an election and candidate ID from that election, return the real candidate ID
+def getRealCandidateID():
+	return ""
 
 #perform the vote by updating database
 def vote():
