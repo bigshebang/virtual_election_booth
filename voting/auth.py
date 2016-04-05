@@ -181,7 +181,39 @@ def validUsername(user):
 
 #make policy for min 8 char passwordddddd with at least 1 upper, lower and number
 def validPass(password):
-	if password:
+	if password: #make sure password isn't blank
+		if len(password) >= 8: #make sure at least 8 chars long
+			upCount = 0
+			lowCount = 0
+			numCount = 0
+
+			for c in password: #count number of different characters in password
+				if c.isdigit(): #is a number
+					numCount += 1
+				else: #not a number
+					charNum = ord(c)
+					if isUpper(charNum): #if uppercase letter
+						upCount += 1
+					elif isLower(charNum): #if lowercase letter
+						lowCount += 1
+
+					if upCount > 0 and lowCount > 0 and numCount > 0:
+						return True
+
+	return False
+
+#return true if uppercase letter and false if not
+def isUpper(charNum):
+	#test if between ascii decimal values for A-Z
+	if charNum >= 65 and charNum <= 90:
+		return True
+	else:
+		return False
+
+#return true if lowercase letter and false if not
+def isLower(charNum):
+	#test if between ascii decimal values for a-z
+	if charNum >= 97 and charNum <= 122:
 		return True
 	else:
 		return False
