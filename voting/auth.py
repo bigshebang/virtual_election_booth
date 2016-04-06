@@ -265,4 +265,3 @@ def validParty(party):
 		return True
 	else:
 		return False
-

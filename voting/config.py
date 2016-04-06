@@ -25,11 +25,6 @@ MYSQL_DB = "ElectionCentral"
 HASHING_METHOD = "sha512"
 HASHING_ROUNDS = 1000000
 
-#csrf and other form protection stuff
-WTF_CSRF_SECRET_KEY = key
-RECAPTCHA_PUBLIC_KEY = "6Lc6rBwTAAAAAA_YI8Rx3IbNVeerhI7XeIanGUIq"
-RECAPTCHA_PRIVATE_KEY = recaptchaKey
-
 #other Flask  stuff
 SESSION_TYPE = "filesystem"
 SESSION_FILE_DIR = "/tmp/flask_session"

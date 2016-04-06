@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, abort, session
-from flask_wtf.csrf import CsrfProtect
+# from flask_wtf.csrf import CsrfProtect
 
 csrf = CsrfProtect()
 
@@ -34,4 +34,3 @@ if __name__ == "__main__":
 #def run():
 #	app = Flask("voting")
 #	return app
-
