@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, redirect, abort, session, Blueprint
 from flask.ext.mysqldb import MySQL
+from threading import Lock
 from voting.utils import loggedIn, getCurElection, tryLogin, getDBTimestamp, getUnixTimestamp
 
 views = Blueprint('views', __name__)
+mutex = Lock()
 
 @views.route("/", methods=["GET"])
 def home():
@@ -99,16 +101,23 @@ def vote(election, candidate=None, voted=True, userid=""):
 	#when we create an election, we need to create the corresponding rows in electionData
 	#because this function will assume they're just there
 
+	mutex.acquire() #get the mutex
+
 	#prep for mysql stuff later on
 	timestamp = getDBTimestamp(getCurTime()) #get a mysql datetime value of the current datetime
-	cur = db.connection.cursor()
+	cur = db.connection.cursor() #get our mysql cursor
+
+	#if user already voted in this election, release mutex and return false
+	if votedAlready(election, userid, cur):
+		mutex.release()
+		return False
 
 	#update mysql db
-	#WE NEED to use a mutex or lock so that only one process can ever perform this update on the db
 	if voted:
+		#should we wrap all of the mysql statements in try/catch blocks in case there's an error?
 		#update electionData by adding 1 to the vote count for the given condition
-		cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp, voted) VALUES" +
-					" ('%d', '%d', '%s', 1)'", (election, userid, timestamp))
+		cur.execute("UPDATE electionData SET num_votes=num_votes+1 WHERE election_id = '%d'" +
+					" AND candidate_id = '%d'", (election, userid, timestamp))
 		result = cur.fetchall()
 
 		#add voter to the voterHistory table with voted=1
@@ -120,6 +129,19 @@ def vote(election, candidate=None, voted=True, userid=""):
 		cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp, voted) VALUES" +
 					" ('%d', '%d', '%s', 0)'", (election, userid, timestamp))
 		result = cur.fetchall()
+
+	mutex.release()
+	return False
+
+#check if a given user voted in a given election already
+def votedAlready(election, userid, cur):
+	cur.execute("SELECT * FROM electionHistory WHERE election_id = '%d' AND voter_id = '%s'",
+				(election, userid))
+	result = cur.fetchall()
+
+	#they have voted before in this election bc they exist in the electionHistory table
+	if len(result) > 0:
+		return True
 
 	return False
 
