@@ -1,11 +1,9 @@
 from flask import Flask, render_template, request, redirect, abort, session, Blueprint
-from flask.ext.mysqldb import MySQL
 from flask.ext.hashing import Hashing
 import re
-from voting.utils import loggedIn, getCurElection, validAge
+from voting.utils import loggedIn, getCurElection, validAge, db
 
 auth = Blueprint('auth', __name__)
-db = MySQL()
 
 @auth.route("/register", methods=["GET", "POST"])
 def register_page():

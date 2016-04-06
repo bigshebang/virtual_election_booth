@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, abort, session
+from flask.ext.mysqldb import MySQL
 
 def createApp(config="voting.config"):
 	#initialize app
@@ -6,6 +7,9 @@ def createApp(config="voting.config"):
 
 	with app.app_context():
 		app.config.from_object(config)
+
+		#setup db
+		db = MySQL(app)
 
 		#import stuff from this app so we can add blue prints
 		from voting.views import views

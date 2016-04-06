@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 import time, datetime
 
 utils = Blueprint('utils', __name__)
+db = MySQL()
 
 #see if user is currently logged in
 def loggedIn():
