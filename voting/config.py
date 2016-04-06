@@ -2,17 +2,20 @@ import os
 
 ##### GENERATE SECRET KEY #####
 with open('.voting_secret_key', 'a+') as secret:
-    secret.seek(0)  # Seek to beginning of file since a+ mode leaves you at the end and w+ deletes the file
-    key = secret.read()
-    if not key:
-        key = os.urandom(64)
-        secret.write(key)
-        secret.flush()
+	secret.seek(0)  # Seek to beginning of file since a+ mode leaves you at the end and w+ deletes the file
+	key = secret.read()
+	if not key:
+		key = os.urandom(64)
+		secret.write(key)
+		secret.flush()
+
+#get private key from file
+with open(".recaptcha_private_key", "r") as f:
+	recaptchaKey = f.read()
 
 ##### SERVER SETTINGS #####
 SECRET_KEY = key
 #database settings
-#SQLALCHEMY_DATABASE_URI = 'mysql://ec-dba:mysql:Password!@localhost/ElectionCentral'
 MYSQL_HOST = "localhost"
 MYSQL_USER = "ec-dba"
 MYSQL_PASSWORD = "mysql:Password!"
@@ -21,6 +24,11 @@ MYSQL_DB = "ElectionCentral"
 #for hashing
 HASHING_METHOD = "sha512"
 HASHING_ROUNDS = 1000000
+
+#csrf and other form protection stuff
+WTF_CSRF_SECRET_KEY = key
+RECAPTCHA_PUBLIC_KEY = "6Lc6rBwTAAAAAA_YI8Rx3IbNVeerhI7XeIanGUIq"
+RECAPTCHA_PRIVATE_KEY = recaptchaKey
 
 #other Flask  stuff
 SESSION_TYPE = "filesystem"
