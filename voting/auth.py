@@ -22,7 +22,7 @@ def register_page():
 		if not validUsername(request.form['username']):
 			error = "You must supply a valid username."
 		elif not validPass(request.form['password']):
-			error = "Password must not be left blank."
+			error = "Password is invalid."
 		elif request.form['password'] != request.form['password2']:
 			error = "Passwords do not match!"
 		elif not validFirst(request.form['first']):
@@ -213,8 +213,8 @@ def validPass(password):
 					elif isLower(charNum): #if lowercase letter
 						lowCount += 1
 
-					if upCount > 0 and lowCount > 0 and numCount > 0:
-						return True
+				if upCount > 0 and lowCount > 0 and numCount > 0:
+					return True
 
 	return False
 
