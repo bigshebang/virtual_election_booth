@@ -23,14 +23,5 @@ def createApp(config="voting.config"):
 
 	return app
 
-#@app.route("/")
-#def home():
-    #return render_template("index.html")
-#	return "balls"
-
 if __name__ == "__main__":
 	app.run(host="0.0.0.0", port=8080)
-
-#def run():
-#	app = Flask("voting")
-#	return app
