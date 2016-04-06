@@ -186,7 +186,7 @@ def validUsername(user):
 
 		#see if username already exists
 		cur = db.connection.cursor()
-		cur.execute("SELECT * FROM voters WHERE username = '%s'", (username))
+		cur.execute("SELECT * FROM voters WHERE username = '%s'", (user))
 		result = cur.fetchall()
 
 		#username doesn't exist, we're finally good!
