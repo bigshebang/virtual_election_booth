@@ -1,6 +1,7 @@
 body{
 	margin: 0px;
 	font-family: sans-serif;
+	background-color: #a89fff;
 }
 
 header{
@@ -50,9 +51,7 @@ nav a{
 }
 
 a:hover{
-	background-color: red;
-	color: black;
-	border-bottom: 1px solid red;
+	background-color: #9203ff;
 }
 
 main{
@@ -67,4 +66,12 @@ div.row{
 div.form{
 	margin: auto;
 	max-width: 75%;
+}
+
+p{
+	text-align: center;
+}
+
+li.active > a{
+	background-color: #549cda;
 }
