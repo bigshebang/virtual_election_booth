@@ -86,3 +86,17 @@ input[type='text'], input[type='password']{
 input[type='submit']{
 	width: 20%;
 }
+
+div.selector{
+	text-align: center;
+}
+
+div.results{
+	width: 50%;
+	float: left;
+}
+
+div.voters{
+	width: 50%;
+	float: right;
+}
