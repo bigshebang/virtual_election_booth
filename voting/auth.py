@@ -251,10 +251,20 @@ def validLast(last):
 
 #make sure the address consists of letters (1+), numbers (1+) and spaces (1+?)
 def validAddress(address):
-	if address:
-		return True
-	else:
-		return False
+    letters = 0
+    numbers = 0
+    space = 0
+    for c in address:
+        charNum = ord(c)
+        if isdigit(c): 
+            numbers += 1
+        elif isLower(charNum) or isUpper(charNum):
+            letters += 1
+        elif isspace(c):
+            space += 1
+        if letters > 1 and numbers > 1 and space > 1:
+            return True
+    return False
 
 #make sure phone number is in the valid XXX-XXX-XXXX format
 def validPhoneNumber(number):
