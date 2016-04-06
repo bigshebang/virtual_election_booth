@@ -9,10 +9,6 @@ with open('.voting_secret_key', 'a+') as secret:
 		secret.write(key)
 		secret.flush()
 
-#get private key from file
-with open(".recaptcha_private_key", "r") as f:
-	recaptchaKey = f.read()
-
 ##### SERVER SETTINGS #####
 SECRET_KEY = key
 #database settings

@@ -7,7 +7,7 @@ utils = Blueprint('utils', __name__)
 
 #see if user is currently logged in
 def loggedIn():
-	return return bool(session.get('id', False))
+	return bool(session.get('id', False))
 
 #get the election_id of the current election
 def getCurElection():

@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, redirect, abort, session
 def createApp(config="voting.config"):
 	#initialize app
 	app = Flask("voting")
-	csrf.init_app(app)
 
 	with app.app_context():
 		app.config.from_object(config)
