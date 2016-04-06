@@ -106,22 +106,25 @@ def vote(election, candidate=None, voted=True, userid=""):
 	# 	return False
 
 	timestamp = getDBTimestamp(getCurTime()) #get a mysql datetime value of the current datetime
+	cur = db.connection.cursor()
 
 	#update mysql db
 	#WE NEED to use a mutex or lock so that only one process can ever perform this update on the db
 	if voted:
-		#update electionData by adding 1 to the vote count for the given condition and add voter
-		#to the voterHistory table with the proper data
-		cur = db.connection.cursor()
-		cur.execute("INSERT INTO electionData (election_id) FROM table WHERE election_id = '%d'", (num))
+		#update electionData by adding 1 to the vote count for the given condition
+		cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp, voted) VALUES" +
+					" ('%d', '%d', '%s', 1)'", (election, userid, timestamp))
 		result = cur.fetchall()
-		pass
+
+		#add voter to the voterHistory table with voted=1
+		cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp, voted) VALUES" +
+					" ('%d', '%d', '%s', 1)'", (election, userid, timestamp))
+		result = cur.fetchall()
 	else: #failed vote
 		#add the vote to voterHistory table but set the voted value to false
-		cur = db.connection.cursor()
-		cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp) FROM table WHERE election_id = '%d'", (num))
+		cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp, voted) VALUES" +
+					" ('%d', '%d', '%s', 0)'", (election, userid, timestamp))
 		result = cur.fetchall()
-		pass
 
 	return False
 
