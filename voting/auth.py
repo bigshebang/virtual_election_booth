@@ -166,9 +166,34 @@ def validSSN(ssn):
 #also do a database check to make sure the username isn't taken
 def validUsername(user):
 	if user:
-		return True
-	else:
-		return False
+		underscore = 0
+		dash = 0
+		letters = 0
+		for c in user:
+			charNum = ord(c)
+			if c == "-":
+				dash += 1
+			elif c == "_":
+				underscore += 1
+			elif not isUpper(charNum) and not isLower(charNum):
+				return False
+			else:
+				letters += 1
+
+			#if too many dashes or underscores
+			if dash > 1 or underscore > 1 or letters < 1:
+				return False
+
+		#see if username already exists
+		cur = db.connection.cursor()
+		cur.execute("SELECT * FROM voters WHERE username = '%s'", (username))
+		result = cur.fetchall()
+
+		#username doesn't exist, we're finally good!
+		if len(result) == 0:
+			return True
+
+	return False
 
 #make policy for min 8 char passwordddddd with at least 1 upper, lower and number
 def validPass(password):
@@ -223,7 +248,7 @@ def validLast(last):
 
 	return False
 
-#make sure the address consists of letters, numbers and spaces
+#make sure the address consists of letters (1+), numbers (1+) and spaces (1+?)
 def validAddress(address):
 	if address:
 		return True
