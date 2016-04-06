@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, abort, session, Blueprint
 from flask.ext.mysqldb import MySQL
+import time
 
 utils = Blueprint('utils', __name__)
 
@@ -11,9 +12,19 @@ def loggedIn():
 def getCurElection():
 	return 0
 
-#get the current time in mysql datetime format - YYYY-MM-DD HH:MI:SS
+#get the current time in unix timestamp
 def getCurTime():
-	return "2016-04-25 10:00:00"
+	return time.time()
+
+#get the mysql datetime format (YYYY-MM-DD HH:MI:SS) from a unix timestamp
+def getDBTimestamp(timestamp):
+	t = time.localtime(timestamp)
+	timeStr = "%d-%d-%d %d:%d:%d" % (t.tm_year, t.tm_mon, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec)
+	return timeStr
+
+#convert a mysql datetime format to a unix timestamp
+def getUnixTimestamp(timestamp):
+	return time.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
 
 #try to login a user given their username and password
 def tryLogin(data):
