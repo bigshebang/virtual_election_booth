@@ -158,8 +158,11 @@ def getUserData(username):
 def validSSN(ssn):
 	if ssn:
 		if re.match("^\d{3}-\d{2}-\d{4}$", ssn): # XXX-XX-XXXX
-			return True
-
+            cur = db.connection.cursor()
+            cur.execute("SELECT * FROM voters WHERE ssn = '%s'",(ssn))
+            result = cur.fetchall()
+            if(len(result) == 0): # ssn not in db
+                return True
 	return False
 
 #what is our policy for this? letters, numbers. then one underscore and/or dash?
@@ -274,10 +277,10 @@ def validBirthday(dob):
 
 	return False
 
-#make sure the party isn't blank
+#make sure the party isn't blank - can it be blank? what if you dont want to identify with a party?
 #do we need to check for anything else really? I guess it should be numbers, letters and spaces
 def validParty(party):
-	if party:
+	# if re.match("^[A-Za-z0-9\s]+$", party): 
+    if(party):
 		return True
-	else:
-		return False
+    return False
