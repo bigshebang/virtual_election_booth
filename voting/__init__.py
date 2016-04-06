@@ -10,7 +10,7 @@ def createApp(config="voting.config"):
 		#import stuff from this app so we can add blue prints
 		from voting.views import views
 		from voting.auth import auth
-		from voting.auth import utils
+		from voting.utils import utils
 
 		#register blue print so pages will render
 		app.register_blueprint(views)
