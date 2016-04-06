@@ -99,12 +99,7 @@ def vote(election, candidate=None, voted=True, userid=""):
 	#when we create an election, we need to create the corresponding rows in electionData
 	#because this function will assume they're just there
 
-	#shouldn't actually need this
-	#verify that the election is still active
-	# curTime = getCurTime()
-	# if not electionActive(election, curTime):
-	# 	return False
-
+	#prep for mysql stuff later on
 	timestamp = getDBTimestamp(getCurTime()) #get a mysql datetime value of the current datetime
 	cur = db.connection.cursor()
 
