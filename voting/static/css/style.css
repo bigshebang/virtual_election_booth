@@ -52,6 +52,7 @@ nav a{
 
 a:hover{
 	background-color: #9203ff;
+	border-bottom: 1px solid #9203ff;
 }
 
 main{
@@ -61,6 +62,7 @@ main{
 div.row{
 	max-width: 50%;
 	margin: auto;
+	margin-top: 12px;
 }
 
 div.form{
@@ -74,4 +76,13 @@ p{
 
 li.active > a{
 	background-color: #549cda;
+	border-bottom: 1px solid #549cda;
+}
+
+input[type='text'], input[type='password']{
+	width: 100%;
+}
+
+input[type='submit']{
+	width: 20%;
 }
