@@ -250,9 +250,9 @@ def validLast(last):
 
 #make sure the address consists of letters (1+), numbers (1+) and spaces (1+?)
 def validAddress(address):
-    letters = 0
-    numbers = 0
-    space = 0
+	letters = 0
+	numbers = 0
+	space = 0
 	for c in address:
 		charNum = ord(c)
 		if c.isdigit:
