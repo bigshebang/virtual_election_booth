@@ -96,10 +96,10 @@ def registerUser(data):
 	#get cursor and add user to voters table
 	cur = db.connection.cursor()
 	cur.execute("INSERT INTO voters (ssn, username, password, firstname, lastname, birthday, " +
-				"address, phoneNumber, politicalParty) VALUES ('%s', '%s', '%s', '%s', '%s', " +
-				"'%s', '%s', '%s', '%s')", (data['ssn'], data['username'], password,
+				"address, phoneNumber, politicalParty) VALUES (%s, %s, %s, %s, %s, " +
+				"%s, %s, %s, %s)", [(data['ssn'], data['username'], password,
 				data['first'], data['last'], data['birthday'], data['address'], data['number'],
-				data['party']))
+				data['party'])])
 	result = cur.fetchall()
 
 	if len(result) > 0:
@@ -140,7 +140,7 @@ def getUserData(username):
 	data = {}
 	#get the id/ssn, firstname, lastname.
 	cur = db.connection.cursor()
-	cur.execute("SELECT * FROM voters WHERE username = '%s'", (username))
+	cur.execute("SELECT * FROM voters WHERE username = '%s'", [username])
 	result = cur.fetchall()
 
 	data["id"] = "id"
@@ -155,7 +155,7 @@ def validSSN(ssn):
 	if ssn:
 		if re.match("^\d{3}-\d{2}-\d{4}$", ssn): # XXX-XX-XXXX
 			cur = db.connection.cursor()
-			cur.execute("SELECT * FROM voters WHERE ssn = '%s'", (ssn))
+			cur.execute("SELECT * FROM voters WHERE ssn = '%s'", [ssn])
 			result = cur.fetchall()
 			if len(result) == 0: # ssn not in db
 				return True
@@ -186,7 +186,7 @@ def validUsername(user):
 
 		#see if username already exists
 		cur = db.connection.cursor()
-		cur.execute("SELECT * FROM voters WHERE username = '%s'", (user))
+		cur.execute("SELECT * FROM voters WHERE username = '%s'", [user])
 		result = cur.fetchall()
 
 		#username doesn't exist, we're finally good!
@@ -236,14 +236,14 @@ def isLower(charNum):
 
 #make sure first name is valid (letters, dashes, apostrophes)
 def validFirst(first):
-	if re.match("^[A-Za-z.-']+$", first): #matches upper, lower, whitespace, and dashes
+	if re.match("^[A-Za-z\s-']+$", first): #matches upper, lower, whitespace, and dashes
 		return True
 
 	return False
 
 #make sure last name is valid (letters, dashes, apostrophes)
 def validLast(last):
-	if re.match("^[A-Za-z.-']+$", last): #matches upper, lower, whitespace, and dashes
+	if re.match("^[A-Za-z\s-']+$", last): #matches upper, lower, whitespace, and dashes
 		return True
 
 	return False
@@ -255,13 +255,13 @@ def validAddress(address):
 	space = 0
 	for c in address:
 		charNum = ord(c)
-		if c.isdigit:
+		if c.isdigit():
 			numbers += 1
 		elif isLower(charNum) or isUpper(charNum):
 			letters += 1
-		elif c.isspace:
+		elif c.isspace():
 			space += 1
-		if letters > 1 and numbers > 1 and space > 1:
+		if letters >= 1 and numbers >= 1 and space >= 1:
 			return True
 	return False
 
@@ -277,7 +277,7 @@ def validPhoneNumber(number):
 #also validate that it's in YYYY-MM-DD format
 def validBirthday(dob):
 	if dob:
-		if re.match("^\d{4}-\d{2}-\d{2}$", number): # YYYY-MM-DD
+		if re.match("^\d{4}-\d{2}-\d{2}$", dob): # YYYY-MM-DD
 			#make sure they're 18 or older
 			if validAge(dob):
 				return True
