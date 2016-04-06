@@ -37,8 +37,6 @@ def register_page():
 			error = "You must supply a valid address."
 		elif not validPhoneNumber(request.form['number']):
 			error = "You must supply a valid phone number."
-		elif not validParty(request.form['party']):
-			error = "You must supply a valid political party."
 		elif not validSSN(request.form['ssn']):
 			error = "You must supply a valid Social Security Number."
 		else:
@@ -276,11 +274,3 @@ def validBirthday(dob):
 				return True
 
 	return False
-
-#make sure the party isn't blank - can it be blank? what if you dont want to identify with a party?
-#do we need to check for anything else really? I guess it should be numbers, letters and spaces
-def validParty(party):
-	# if re.match("^[A-Za-z0-9\s]+$", party): 
-    if(party):
-		return True
-    return False
