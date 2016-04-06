@@ -1,20 +1,33 @@
 {% extends "layout.html" %}
 {% block title %}Election Central Results{% endblock %}
-{% block home_active %}{% endblock %}
-{% block vote_active %}{% endblock %}
-{% block regi_active %}{% endblock %}
 {% block end_active %}class='active'{% endblock %}
 {% block content %}
-	<table>
-		<tr>
-			<th>Candidate</th>
-			<th>Votes Received</th>
-		</tr>
-	{% for candidate, total in results: %}
-	<tr>
-		<td>{{ candidate }}</td>
-		<td>{{ total }}</td>
-	</tr>
-	{% endfor %}
-	</table>
+	<div class='selector'>
+		<form name='electionForm' method='get' action='election'>
+			<p>To view the results of past elections, select an election and click "Submit"</p>
+			<select name='prior_election'>
+			{% for eid, election in prior_elections: %}
+				<option value='{{ eid }}'>{{ election }}</option>
+			{% endfor %}
+			</select>
+			<input type='submit'/>
+		</form>
+	</div>
+	<div class='results'>
+		<table>
+			<tr colspan='2'>
+				<th>{{ election_info }}</th>
+			</tr>
+			<tr>
+				<th>Candidate</th>
+				<th>Votes Received</th>
+			</tr>
+		{% for candidate, total in results: %}
+			<tr>
+				<td>{{ candidate }}</td>
+				<td>{{ total }}</td>
+			</tr>
+		{% endfor %}
+		</table>
+	</div>
 {% endblock %}

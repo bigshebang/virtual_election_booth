@@ -1,8 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}Election Central{% endblock %}
 {% block home_active %}class='active'{% endblock %}
-{% block vote_active %}{% endblock %}
-{% block regi_active %}{% endblock %}
 {% block content %}
 	<section>
 		<p>Welcome to Election Central! Please <a href='register'>register</a> or log in.</p>
@@ -26,10 +24,12 @@
 				</div>
 				{% endif %}
 			</form>
-			{% elif voted %}
-				You have voted
+			{% elif voted and election_happening %}
+				You have cast a vote in the current election.
+			{% elif election_happening %}
+				You have yet to vote in today's election.
 			{% else %}
-				Hi
+				There are no elections currently in progress.
 			{% endif %}
 		</div>
 	</section>

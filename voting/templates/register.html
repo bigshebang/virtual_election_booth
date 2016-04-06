@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}Election Central Voter Registration{% endblock %}
 {% block script %}
+	{% if not logged_in %}
 	<script>
 		function sub(frm){
 			var bd = frm.elements['birthday'];
@@ -11,11 +12,11 @@
 			frm.submit();
 		}
 	</script>
+	{% endif %}
 {% endblock %}
-{% block home_active %}{% endblock %}
-{% block vote_active %}class='disable'{% endblock %}
 {% block regi_active %}class='active'{% endblock %}
 {% block content %}
+	{% if not logged_in %}
 		<div class='form'>
 			<form name='registerForm' method='post' action='register'>
 				<div class='row'>
@@ -35,19 +36,28 @@
 					<input type='text' name='ssn' id='ssn' size='11' maxlength='11'/>
 				</div>
 				<div class='row'>
-					<label for='birthday'>Birthday:</label>
-					<select name='year'>
-						{% for i in range(1900, 1999): %}
-						<option>{{ i }}</option>
-						{% endfor %}
-					</select>
+					<label for='birthday'>Birthday (MM-DD-YYYY):</label>
 					<select name='month'>
-						{% for i in range(1,13): %}
+						<option value='1'>Jan</option>
+						<option value='2'>Feb</option>
+						<option value='3'>Mar</option>
+						<option value='4'>Apr</option>
+						<option value='5'>May</option>
+						<option value='6'>Jun</option>
+						<option value='7'>Jul</option>
+						<option value='8'>Aug</option>
+						<option value='9'>Sep</option>
+						<option value='10'>Oct</option>
+						<option value='11'>Nov</option>
+						<option value='12'>Dec</option>
+					</select>
+					<select name='day'>
+						{% for i in range(1,31): %}
 						<option>{{ i }}</option>
 						{% endfor %}
 					</select>
 					<select name='year'>
-						{% for i in range(1,31): %}
+						{% for i in range(1999, 1900, -1): %}
 						<option>{{ i }}</option>
 						{% endfor %}
 					</select>
@@ -83,4 +93,7 @@
 				{% endif %}
 			</form>
 		</div>
+	{% else %}
+		<script>alert('You are already registered');history.back();</script>
+	{% endif %}
 {% endblock %}
