@@ -13,19 +13,39 @@ def election_page():
 	if not loggedIn(): #not logged in, make em register
 		return redirect("/register")
 
-	curElection = getCurElection()
+	#instead of just getting the current election, we want to be able to get any election
+	#we should be able to do a drop down on the page and use the IDs of the elections to choose
+	#which one we want to display
+	if "election" in request.form.keys():
+		if validElectionID(request.form["election"]):
+			curElection = request.form["election"]
+		else: #election id isn't a number
+			error = "Election must be a number."
+			return render_template("election.html", logged_in=True, show_results=getCurElection(),
+									error=error)
+	else:
+		curElection = getCurElection()
+
 	if curElection:
 		candidates = getCandidates(curElection) #get candidates in election
 
 		#get votes for each candidate
 		votes = ()
 		for c in candidates:
-			votes.append(getCandidateVotes(c))
+			votes.append(getCandidateVotes(curElection, c))
 
 		voted, notVoted = getVoters(curElection)
-		return render_template("election.html", logged_in=True, show_results=True, results=[candidates, votes], voted=voted, notVoted=notVoted)
-	else: #no election today, return to home page
-		return redirect("/")
+		return render_template("election.html", logged_in=True, show_results=True,
+								results=[candidates, votes], voted=voted, notVoted=notVoted)
+	else: #election not found, return to home page
+		 #they gave us an id to find a given election but we didn't find it
+		if request.form["election"]:
+			error = "Election not found."
+			curElection = getCurElection() #need to check if there's an election today
+		else: #there isn't an election today
+			error = "No election today."
+		return render_template("election.html", logged_in=True, show_results=curElection,
+								error=error)
 
 @views.route("/vote", methods=["GET", "POST"])
 def vote_page():
@@ -36,7 +56,8 @@ def vote_page():
 		curElection = getCurElection()
 		if curElection:
 			candidates = getCandidates(curElection)
-			return render_template("vote.html", logged_in=True, show_results=True, listLen=len(candidates), candidates=candidates)
+			return render_template("vote.html", logged_in=True, show_results=True,
+									listLen=len(candidates), candidates=candidates)
 	elif request.method == "POST":
 		#user voted, now we need to process the data
 		curElection = getCurElection()
@@ -56,10 +77,6 @@ def vote_page():
 
 	#there is no election today
 	return render_template("vote.html", logged_in=True, show_results=False)
-
-#get the current time in mysql datetime format - YYYY-MM-DD HH:MI:SS
-def getCurTime():
-	return "2016-04-25 10:00:00"
 
 #perform the vote by updating database. return true if successful, false if not
 def vote(election, candidate=None, voted=True):
@@ -83,6 +100,14 @@ def vote(election, candidate=None, voted=True):
 
 	return False
 
+#make sure a given election ID is a number and represents a valid election_id
+def validElectionID(num):
+	if num.isdigit():
+		#make sure value is in bounds before returning true
+		return True
+
+	return False
+
 #given an election and current time, see if that election is still active
 def electionActive(election, curTime):
 	return True
@@ -92,10 +117,12 @@ def electionActive(election, curTime):
 def getCandidates(election):
 	return []
 
-def getCandidateVotes(candidate):
+#get the number votes for a given candidate in a given election
+def getCandidateVotes(election, candidate):
 	return []
 
 #get who did and did not vote in the given election
 #this should be sorted alphabetically
+#if we want to get fancy, we'll do alphabetical, then put the current user at the top
 def getVoters(election):
 	return [], []
