@@ -140,7 +140,7 @@ def getUserData(username):
 	data = {}
 	#get the id/ssn, firstname, lastname.
 	cur = db.connection.cursor()
-	cur.execute("SELECT * FROM voters WHERE username = '%s'", [username])
+	cur.execute("SELECT * FROM voters WHERE username = %s", [username])
 	result = cur.fetchall()
 
 	data["id"] = "id"
@@ -155,7 +155,7 @@ def validSSN(ssn):
 	if ssn:
 		if re.match("^\d{3}-\d{2}-\d{4}$", ssn): # XXX-XX-XXXX
 			cur = db.connection.cursor()
-			cur.execute("SELECT * FROM voters WHERE ssn = '%s'", [ssn])
+			cur.execute("SELECT * FROM voters WHERE ssn = %s", [ssn])
 			result = cur.fetchall()
 			if len(result) == 0: # ssn not in db
 				return True
@@ -186,7 +186,7 @@ def validUsername(user):
 
 		#see if username already exists
 		cur = db.connection.cursor()
-		cur.execute("SELECT * FROM voters WHERE username = '%s'", [user])
+		cur.execute("SELECT * FROM voters WHERE username = %s", [user])
 		result = cur.fetchall()
 
 		#username doesn't exist, we're finally good!
