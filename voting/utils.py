@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, abort, session, Blueprint
 from flask.ext.mysqldb import MySQL
-import time
+from dateutil.relativedelta import relativedelta
+import time, datetime
 
 utils = Blueprint('utils', __name__)
 
@@ -25,6 +26,24 @@ def getDBTimestamp(timestamp):
 #convert a mysql datetime format to a unix timestamp
 def getUnixTimestamp(timestamp):
 	return time.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+
+#see if a given date is 18 or more years ago from today
+#http://stackoverflow.com/a/8971809/1200388
+def validAge(dob):
+	#get datetime object of given dob
+	vals = dob.split("-")
+
+	#if date cannot be converted it isn't a real date
+	try:
+		dobDate = datetime.date(vals[0], vals[1], vals[2])
+	except:
+		return False
+
+	#get today's date
+	today = datetime.date.today()
+
+	#if 18 years or older return true, false if else
+	return relativedelta(today, dobDate).years >= 18
 
 #try to login a user given their username and password
 def tryLogin(data):
