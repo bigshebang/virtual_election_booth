@@ -156,11 +156,12 @@ def getUserData(username):
 def validSSN(ssn):
 	if ssn:
 		if re.match("^\d{3}-\d{2}-\d{4}$", ssn): # XXX-XX-XXXX
-            cur = db.connection.cursor()
-            cur.execute("SELECT * FROM voters WHERE ssn = '%s'",(ssn))
-            result = cur.fetchall()
-            if(len(result) == 0): # ssn not in db
-                return True
+			cur = db.connection.cursor()
+			cur.execute("SELECT * FROM voters WHERE ssn = '%s'", (ssn))
+			result = cur.fetchall()
+			if len(result) == 0: # ssn not in db
+				return True
+
 	return False
 
 #what is our policy for this? letters, numbers. then one underscore and/or dash?
@@ -254,17 +255,17 @@ def validAddress(address):
     letters = 0
     numbers = 0
     space = 0
-    for c in address:
-        charNum = ord(c)
-        if c.isdigit: 
-            numbers += 1
-        elif isLower(charNum) or isUpper(charNum):
-            letters += 1
-        elif c.isspace:
-            space += 1
-        if letters > 1 and numbers > 1 and space > 1:
-            return True
-    return False
+	for c in address:
+		charNum = ord(c)
+		if c.isdigit:
+			numbers += 1
+		elif isLower(charNum) or isUpper(charNum):
+			letters += 1
+		elif c.isspace:
+			space += 1
+		if letters > 1 and numbers > 1 and space > 1:
+			return True
+	return False
 
 #make sure phone number is in the valid XXX-XXX-XXXX format
 def validPhoneNumber(number):
