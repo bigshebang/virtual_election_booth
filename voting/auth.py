@@ -97,9 +97,10 @@ def registerUser(data):
 	cur = db.connection.cursor()
 	cur.execute("INSERT INTO voters (ssn, username, password, firstname, lastname, birthday, " +
 				"address, phoneNumber, politicalParty) VALUES (%s, %s, %s, %s, %s, " +
-				"%s, %s, %s, %s)", [(data['ssn'], data['username'], password,
+				"%s, %s, %s, %s)", [data['ssn'], data['username'], password,
 				data['first'], data['last'], data['birthday'], data['address'], data['number'],
-				data['party'])])
+				data['party']])
+    db.connection.commit()
 	result = cur.fetchall()
 
 	if len(result) > 0:
