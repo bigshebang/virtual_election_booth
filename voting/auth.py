@@ -256,11 +256,11 @@ def validAddress(address):
     space = 0
     for c in address:
         charNum = ord(c)
-        if isdigit(c): 
+        if c.isdigit: 
             numbers += 1
         elif isLower(charNum) or isUpper(charNum):
             letters += 1
-        elif isspace(c):
+        elif c.isspace:
             space += 1
         if letters > 1 and numbers > 1 and space > 1:
             return True
