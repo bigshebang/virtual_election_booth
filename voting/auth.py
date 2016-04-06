@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, abort, session, Blu
 from flask.ext.mysqldb import MySQL
 from flask.ext.hashing import Hashing
 import re
-from voting.utils import loggedIn, getCurElection
+from voting.utils import loggedIn, getCurElection, validAge
 
 auth = Blueprint('auth', __name__)
 db = MySQL()
@@ -142,7 +142,14 @@ def setupSession(username, ssn=None, first=None, last=None):
 #get certain user data and return in a dictionary
 def getUserData(username):
 	data = {}
-	#make some mysql queries so we can get the id/ssn, firstname, lastname.
+	#get the id/ssn, firstname, lastname.
+	cur = db.connection.cursor()
+	cur.execute("SELECT * FROM voters WHERE username = '%s'", (username))
+	result = cur.fetchall()
+
+	data["id"] = "id"
+	data["firstname"] = "firstname"
+	data["lastname"] = "lastname"
 	return data
 
 #validate an SSN. return True if valid and False if not
@@ -204,14 +211,14 @@ def isLower(charNum):
 
 #make sure first name is valid (letters, dashes, apostrophes)
 def validFirst(first):
-	if re.match("^[A-Za-z.-']+$", first): # matches upper, lower, whitespace, and dashes 
+	if re.match("^[A-Za-z.-']+$", first): #matches upper, lower, whitespace, and dashes
 		return True
 
 	return False
 
 #make sure last name is valid (letters, dashes, apostrophes)
 def validLast(last):
-	if re.match("^[A-Za-z.-']+$", last): # matches upper, lower, whitespace, and dashes 
+	if re.match("^[A-Za-z.-']+$", last): #matches upper, lower, whitespace, and dashes
 		return True
 
 	return False
@@ -235,10 +242,10 @@ def validPhoneNumber(number):
 #also validate that it's in YYYY-MM-DD format
 def validBirthday(dob):
 	if dob:
-		#we also need to find some module to verify that the birthday is 
-		#18 or more years ago and that it's a valid date in general
 		if re.match("^\d{4}-\d{2}-\d{2}$", number): # YYYY-MM-DD
-			return True
+			#make sure they're 18 or older
+			if validAge(dob):
+				return True
 
 	return False
 
