@@ -1,7 +1,4 @@
 from flask import Flask, render_template, request, redirect, abort, session
-# from flask_wtf.csrf import CsrfProtect
-
-csrf = CsrfProtect()
 
 def createApp(config="voting.config"):
 	#initialize app
