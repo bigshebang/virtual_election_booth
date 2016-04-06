@@ -6,6 +6,10 @@ utils = Blueprint('utils', __name__)
 def loggedIn():
 	return return bool(session.get('id', False))
 
-#get the current active election for the day
+#get the election_id of the current election
 def getCurElection():
-	return ""
+	return 0
+
+#get the current time in mysql datetime format - YYYY-MM-DD HH:MI:SS
+def getCurTime():
+	return "2016-04-25 10:00:00"
