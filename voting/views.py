@@ -186,11 +186,11 @@ def electionActive(election, curTime):
 #get and return all of the election IDs and names for elections that are over
 #see getLastElection() in utils.py for help with getting an election that's over
 def getElections():
-    cur = db.connection.cursor()
-    cur.execute("SELECT election_id, name FROM elections")
-    results = cur.fetchall()
-	prior_elections = [] # list of tuples (eid, name)
-	for (eid, name) in results:
+    	cur = db.connection.cursor()
+    	cur.execute("SELECT election_id, name FROM elections")
+	results = cur.fetchall()
+    	prior_elections = [] # list of tuples (eid, name)
+    	for (eid, name) in results:
 		prior_elections.append((eid,name))
 	return prior_elections
 
@@ -201,10 +201,13 @@ def getCandidates(election):
 	cur = db.connection.cursor()
 	cur.execute("SELECT candidate_id FROM electionData WHERE election_id = %s ORDER BY" +
 				" firstname", [election])
-	result = cur.fetchall()
-
-	#process results
+	results = cur.fetchall()
 	candidates = []
+	for candidate_id in results:
+		cur.execute("SELECT firstname, lastname FROM candidates WHERE candidate_id = %s", [candidate_id])
+		res = cur.fetchall()
+		candidate_name = result[0][0] + " " + result[0][1]
+		candidates.append(candidate_name)
 	return candidates
 
 #get the number votes for a given candidate in a given election
@@ -215,8 +218,7 @@ def getCandidateVotes(election, candidate):
 				" %s", [election, candidate])
 	result = cur.fetchall()
 
-	#process results
-	votes = []
+	votes = result[0]
 	return votes
 
 #get who did and did not vote in the given election
