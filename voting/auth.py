@@ -109,7 +109,10 @@ def registerUser(data):
 
 #get data about the given user and put it into the session data
 def setupSession(username, ssn=None, first=None, last=None):
-	session.regenerate() #might need to wrap this in a try block
+	try:
+		session.regenerate()
+	except:
+		pass #some objects don't have regenerate
 
 	#put username and other data into session
 	session["username"] = username
