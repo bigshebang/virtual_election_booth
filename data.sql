@@ -1,3 +1,8 @@
+######################################################################
+# script doesnt work but manually copying and pasting into sql works #
+# idk why.. sql still dumb                                           #
+######################################################################
+
 # Adding fake voter information 
 INSERT INTO voters (ssn, username, password, firstname, lastname, birthday, address, phoneNumber, politicalParty) VALUES("123-45-6789", "user1", "wont work", "first", "last", "1990-09-09", "123 st", "111-111-1111", "party");
 INSERT INTO voters (ssn, username, password, firstname, lastname, birthday, address, phoneNumber, politicalParty) VALUES("111-22-3333", "user2", "wont work", "name", "friend", "1994-05-05", "1 st", "222-222-2222", "party2");
@@ -12,5 +17,5 @@ INSERT INTO candidates (ssn, firstname, lastname, politicalParty) VALUES("443-09
 
 
 # Adding fake elections
-INSERT INTO elections (name, location, start_date, end_date, position) VALUES ("President", "USA", "2016-04-01 12:00:00", "2016-04-30 12:00:00", "President")
+INSERT INTO elections (name, location, start_date, end_date, position) VALUES ("President", "USA", "2016-04-01 12:00:00", "2016-04-30 12:00:00", "President");
 
