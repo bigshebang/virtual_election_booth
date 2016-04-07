@@ -99,7 +99,7 @@ def registerUser(data):
 				"%s, %s, %s, %s)", [data['ssn'], data['username'], password,
 				data['first'], data['last'], data['birthday'], data['address'], data['number'],
 				data['party']])
-    db.connection.commit()
+	db.connection.commit()
 	result = cur.fetchall()
 
 	if len(result) > 0:
