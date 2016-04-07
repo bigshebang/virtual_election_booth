@@ -102,7 +102,9 @@ def registerUser(data):
 	db.connection.commit()
 	result = cur.fetchall()
 
-	if len(result) > 0:
+    # since its an insert idk if there will be any results 
+    # might have to do select before and after, then compare 
+	if len(result) > 0:  
 		return True
 	else:
 		return False
@@ -229,14 +231,14 @@ def isLower(charNum):
 
 #make sure first name is valid (letters, dashes, apostrophes)
 def validFirst(first):
-	if re.match("^[A-Za-z\s-']+$", first): #matches upper, lower, whitespace, and dashes
+	if re.match("^[A-Za-z\-\s']+$", first): #matches upper, lower, whitespace, and dashes
 		return True
 
 	return False
 
 #make sure last name is valid (letters, dashes, apostrophes)
 def validLast(last):
-	if re.match("^[A-Za-z\s-']+$", last): #matches upper, lower, whitespace, and dashes
+	if re.match("^[A-Za-z\-\s']+$", last): #matches upper, lower, whitespace, and dashes
 		return True
 
 	return False
@@ -269,6 +271,7 @@ def validPhoneNumber(number):
 #make sure birthday is valid date that is at least 18 years ago from today
 #also validate that it's in YYYY-MM-DD format
 def validBirthday(dob):
+    return True # REMOVE THIS WHEN JS ISSUE FIXED!!!!
 	if dob:
 		if re.match("^\d{4}-\d{2}-\d{2}$", dob): # YYYY-MM-DD
 			#make sure they're 18 or older
