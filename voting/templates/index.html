@@ -25,9 +25,9 @@
 				{% endif %}
 			</form>
 		</div>
-		{% elif voted and election_happening %}
+		{% elif voted and show_results %}
 			<p>You have cast a vote in the current election.</p>
-		{% elif election_happening %}
+		{% elif show_results %}
 			<p>You have yet to vote in today's election.</p>
 		{% else %}
 			<p>There are no elections currently in progress.</p>
