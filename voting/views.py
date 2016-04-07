@@ -34,7 +34,7 @@ def election_page():
 		#get votes for each candidate
 		results = []
 		for c,cid in candidates:
-			votes = getCandidateVotes(curElection, cid)
+			votes = int(getCandidateVotes(curElection, cid)[0])
 			results.append((c, votes))
 
 		voted, notVoted = getVoters(curElection)
