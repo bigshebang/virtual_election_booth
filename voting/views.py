@@ -222,18 +222,28 @@ def getCandidateVotes(election, candidate):
 #get who did and did not vote in the given election
 #this should be sorted alphabetically
 #if we want to get fancy, we'll do alphabetical, then put the current user at the top
+# --- not getting fancy..
 def getVoters(election):
+	voted = []
+	notVoted = []
 	#get cursor and data from table
 	cur = db.connection.cursor()
 	#get those who voted
-	cur.execute("SELECT * FROM voterHistory WHERE election = %s AND voted = 1", [election])
+	cur.execute("SELECT voter_id FROM voterHistory WHERE election = %s AND voted = 1", [election])
 	result = cur.fetchall()
-
+	for voter_id in result:
+		cur.execute("SELECT firstname, lastname FROM voters WHERE voter_id = %s", [voter_id])
+		r = cur.fetchall()
+		voter_name = r[0][0] + " " + r[0][1]
+		voted.append(voter_name)
 	#get those who didn't vote
-	cur.execute("SELECT * FROM voterHistory WHERE election = %s AND voted = 0", [election])
+	cur.execute("SELECT voter_id FROM voterHistory WHERE election = %s AND voted = 0", [election])
 	result2 = cur.fetchall()
+	for voter_id in result2:
+		cur.execute("SELECT firstname, lastname FROM voters WHERE voter_id = %s", [voter_id])
+		r = cur.fetchall()
+		voter_name = r[0][0] + " " + r[0][1]
+		notVoted.append(voter_name)
 
 	#process results from result and result2
-	voted = []
-	notVoted = []
 	return voted, notVoted
