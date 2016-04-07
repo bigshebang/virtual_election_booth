@@ -16,16 +16,16 @@ def election_page():
 	if not loggedIn(): #not logged in, make em register
 		return redirect("/register")
 
-	#instead of just getting the current election, we want to be able to get any election
-	#we should be able to do a drop down on the page and use the IDs of the elections to choose
-	#which one we want to display
+	#get all previous election IDs and names
+	prior = getElections()
+
 	if "election" in request.form.keys():
 		if validElectionID(request.args.get("election")):
 			curElection = request.args.get("election")
 		else: #election id isn't a number
 			error = "Election must be a number."
-			return render_template("election.html", logged_in=True, show_results=getCurElection(),
-									error=error)
+			return render_template("election.html", logged_in=True, prior_elections=prior,
+									show_results=getCurElection(), error=error)
 	else:
 		curElection = getLastElection()
 
@@ -39,16 +39,16 @@ def election_page():
 
 		voted, notVoted = getVoters(curElection)
 		return render_template("election.html", logged_in=True, show_results=True,
-								results=[candidates, votes], voted=voted, notVoted=notVoted)
+								results=[candidates, votes], voted=voted, notVoted=notVoted,
+								prior_elections=prior)
 	else: #election not found, return to home page
 		 #they gave us an id to find a given election but we didn't find it
 		if request.args.get("election"):
 			error = "Election not found."
-			curElection = getCurElection() #need to check if there's an election today
 		else: #there isn't an election today
 			error = "No election today."
-		return render_template("election.html", logged_in=True, show_results=curElection,
-								error=error)
+		return render_template("election.html", logged_in=True, show_results=getCurElection(),
+								error=error, prior_elections=prior)
 
 @views.route("/vote", methods=["GET", "POST"])
 def vote_page():
@@ -169,7 +169,7 @@ def validCandidateID(election, candidate):
 		#if we just keep real candidate id throughout everything, we shouldn't need this and
 		#everything else should be easier
 		cur = db.connection.cursor()
-		cur.execute("SELECT * FROM electionData WHERE election_id = %d", num)
+		cur.execute("SELECT * FROM electionData WHERE election_id = %d", [election])
 		result = cur.fetchall()
 
 		#candidate can be from 0 up to n-1 (indexing from 0)
@@ -182,6 +182,11 @@ def validCandidateID(election, candidate):
 #WE MAY NOT NEED THIS
 def electionActive(election, curTime):
 	return True
+
+#get and return all of the election IDs and names for elections that are over
+#see getLastElection() in utils.py for help with getting an election that's over
+def getElections():
+	return (ids, names)
 
 #return a list of the candidates running in the given election
 #this MUST be ordered alphabetically by first name
