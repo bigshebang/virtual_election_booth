@@ -23,10 +23,13 @@ def getCurElection():
 	#THIS IS NOT DONE, NEED TO GET THE ID FROM result AND RETURN IT IN THE IF PART
 	#the above query should be good though
 	###############################################################################################
-	if len(result) == 1:
-		return 1
-	else:
-		return None
+	# I think it is done now!
+
+	election_ids = []
+	for eid in result:
+		election_ids.appened(eid)
+
+	return election_ids
 
 #get the last election that is no longer accepting votes
 def getLastElection():
@@ -40,10 +43,8 @@ def getLastElection():
 	#THIS IS NOT DONE, NEED TO GET THE ID FROM result AND RETURN IT IN THE IF PART
 	#the above query should be good though
 	###############################################################################################
-	if len(result) == 1:
-		return 1
-	else:
-		return None
+	# I think it is done now!
+	return result[0]
 
 #get the current time in unix timestamp
 def getCurTime():
