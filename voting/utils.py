@@ -44,7 +44,9 @@ def getLastElection():
 	#the above query should be good though
 	###############################################################################################
 	# I think it is done now!
-	return result[0]
+	if len(result) != 0:
+		return result[0]
+	return None
 
 #get the current time in unix timestamp
 def getCurTime():

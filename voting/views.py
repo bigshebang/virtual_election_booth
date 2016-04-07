@@ -199,8 +199,9 @@ def getElections():
 def getCandidates(election):
 	#get cursor and data from table
 	cur = db.connection.cursor()
-	cur.execute("SELECT candidate_id FROM electionData WHERE election_id = %s ORDER BY" +
-				" firstname", [election])
+	# if we want to do ORDER BY we have to use a union or join b\c electionData doesnt have a firstname field 
+	# cur.execute("SELECT candidate_id FROM electionData WHERE election_id = %s ORDER BY firstname", [election])
+	cur.execute("SELECT candidate_id FROM electionData WHERE election_id = %s", [election])
 	results = cur.fetchall()
 	candidates = []
 	for candidate_id in results:
