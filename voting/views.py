@@ -186,6 +186,10 @@ def electionActive(election, curTime):
 #get and return all of the election IDs and names for elections that are over
 #see getLastElection() in utils.py for help with getting an election that's over
 def getElections():
+    cur = db.connection.cursor()
+    cur.execute("SELECT election_id, name FROM elections")
+    result = cur.fetchall()
+    raise
 	return (ids, names)
 
 #return a list of the candidates running in the given election
