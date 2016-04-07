@@ -13,7 +13,37 @@ def loggedIn():
 
 #get the election_id of the current election
 def getCurElection():
-	return 0
+	timestamp = getDBTimestamp(getCurTime()) #get today in mysql datetime format
+	cur = db.connection.cursor()
+	cur.execute("SELECT election_id FROM elections WHERE start_date <= %s AND end_date >= %s" +
+				"ORDER BY end_date DESC LIMIT 1", [timestamp, timestamp])
+	result = cur.fetchall()
+
+	###############################################################################################
+	#THIS IS NOT DONE, NEED TO GET THE ID FROM result AND RETURN IT IN THE IF PART
+	#the above query should be good though
+	###############################################################################################
+	if len(result) == 1:
+		return 1
+	else:
+		return -1
+
+#get the last election that is no longer accepting votes
+def getLastElection():
+	timestamp = getDBTimestamp(getCurTime()) #get today in mysql datetime format
+	cur = db.connection.cursor()
+	cur.execute("SELECT election_id FROM elections WHERE end_date < %s ORDER BY end_date DESC" +
+				" LIMIT 1", [timestamp])
+	result = cur.fetchall()
+
+	###############################################################################################
+	#THIS IS NOT DONE, NEED TO GET THE ID FROM result AND RETURN IT IN THE IF PART
+	#the above query should be good though
+	###############################################################################################
+	if len(result) == 1:
+		return 1
+	else:
+		return -1
 
 #get the current time in unix timestamp
 def getCurTime():
