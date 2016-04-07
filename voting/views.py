@@ -31,11 +31,11 @@ def election_page():
 	
 	if curElection:
 		candidates = getCandidates(curElection) #get candidates in election
-
+		raise
 		#get votes for each candidate
 		results = []
-		for c in candidates:
-			votes = getCandidateVotes(curElection, c)
+		for c,cid in candidates:
+			votes = getCandidateVotes(curElection, cid)
 			results.append(c, votes)
 
 		voted, notVoted = getVoters(curElection)
@@ -208,16 +208,16 @@ def getCandidates(election):
 	for candidate_id in results:
 		cur.execute("SELECT firstname, lastname FROM candidates WHERE candidate_id = %s", [candidate_id])
 		res = cur.fetchall()
-		candidate_name = result[0][0] + " " + result[0][1]
-		candidates.append(candidate_name)
+		candidate_name = res[0][0] + " " + res[0][1]
+		candidates.append(candidate_name, candidate_id)
 	return candidates
 
 #get the number votes for a given candidate in a given election
-def getCandidateVotes(election, candidate):
+def getCandidateVotes(election_id, candidate_id):
 	#get cursor and number of votes for given candidate
 	cur = db.connection.cursor()
 	cur.execute("SELECT num_votes FROM electionData WHERE election_id = %s AND candidate_id =" +
-				" %s", [election, candidate])
+				" %s", [election_id, candidate_id])
 	result = cur.fetchall()
 
 	votes = result[0]
