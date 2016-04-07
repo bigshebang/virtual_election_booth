@@ -26,7 +26,7 @@ def getCurElection():
 	if len(result) == 1:
 		return 1
 	else:
-		return -1
+		return None
 
 #get the last election that is no longer accepting votes
 def getLastElection():
@@ -43,7 +43,7 @@ def getLastElection():
 	if len(result) == 1:
 		return 1
 	else:
-		return -1
+		return None
 
 #get the current time in unix timestamp
 def getCurTime():
