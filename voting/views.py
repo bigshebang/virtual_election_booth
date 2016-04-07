@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, abort, session, Blueprint
 # from flask.ext.mysqldb import MySQL
 from threading import Lock
-from voting.utils import loggedIn, getCurElection, tryLogin, getDBTimestamp, getUnixTimestamp, db
+from voting.utils import loggedIn, getCurElection, getLastElection, tryLogin, getDBTimestamp, getUnixTimestamp, db
 
 views = Blueprint('views', __name__)
 mutex = Lock()
@@ -27,7 +27,7 @@ def election_page():
 			return render_template("election.html", logged_in=True, show_results=getCurElection(),
 									error=error)
 	else:
-		curElection = getCurElection()
+		curElection = getLastElection()
 
 	if curElection:
 		candidates = getCandidates(curElection) #get candidates in election
@@ -145,12 +145,16 @@ def votedAlready(election, userid, cur):
 
 	return False
 
-#make sure a given election ID is a number and represents a valid election_id
+#make sure a given election ID is a number and represents a valid election_id. also check to make
+#sure this election is over
 def validElectionID(num):
 	if num.isdigit():
-		#make sure value of num references a valid election before returning true
+		timestamp = getDBTimestamp(getCurTime()) #today's timestamp
+
+		#make sure value of num references a valid election that has ended
 		cur = db.connection.cursor()
-		cur.execute("SELECT * FROM table WHERE election_id = %d", [num])
+		cur.execute("SELECT * FROM elections WHERE election_id = %d WHERE end_date < %s",
+					[num, timestamp])
 		result = cur.fetchall()
 
 		if len(result) > 0:
@@ -165,7 +169,7 @@ def validCandidateID(election, candidate):
 		#if we just keep real candidate id throughout everything, we shouldn't need this and
 		#everything else should be easier
 		cur = db.connection.cursor()
-		cur.execute("SELECT * FROM table WHERE election_id = %d", num)
+		cur.execute("SELECT * FROM electionData WHERE election_id = %d", num)
 		result = cur.fetchall()
 
 		#candidate can be from 0 up to n-1 (indexing from 0)
