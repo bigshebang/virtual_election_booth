@@ -27,7 +27,7 @@ def getCurElection():
 
 	election_ids = []
 	for eid in result:
-		election_ids.appened(eid)
+		election_ids.append(eid)
 
 	return election_ids
 
