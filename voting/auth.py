@@ -125,8 +125,8 @@ def setupSession(username, ssn=None, first=None, last=None):
 		userData = getUserData(session["username"])
 
 	session["id"] = userData["id"]
-	session["firstname"] = userData["first"]
-	session["lastname"] = userData["last"]
+	session["firstname"] = userData["firstname"]
+	session["lastname"] = userData["lastname"]
 
 #get certain user data and return in a dictionary
 def getUserData(username):
