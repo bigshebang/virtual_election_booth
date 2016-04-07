@@ -28,18 +28,19 @@ def election_page():
 									show_results=getCurElection(), error=error)
 	else:
 		curElection = getLastElection()
-
+	
 	if curElection:
 		candidates = getCandidates(curElection) #get candidates in election
 
 		#get votes for each candidate
-		votes = ()
+		results = []
 		for c in candidates:
-			votes.append(getCandidateVotes(curElection, c))
+			votes = getCandidateVotes(curElection, c)
+			results.append(c, votes)
 
 		voted, notVoted = getVoters(curElection)
 		return render_template("election.html", logged_in=True, show_results=True,
-								results=[candidates, votes], voted=voted, notVoted=notVoted,
+								results=results, voted=voted, notVoted=notVoted,
 								prior_elections=prior)
 	else: #election not found, return to home page
 		 #they gave us an id to find a given election but we didn't find it
