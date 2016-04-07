@@ -116,18 +116,18 @@ def vote(election, candidate=None, voted=True, userid=""):
 	if voted:
 		#should we wrap all of the mysql statements in try/catch blocks in case there's an error?
 		#update electionData by adding 1 to the vote count for the given condition
-		cur.execute("UPDATE electionData SET num_votes=num_votes+1 WHERE election_id = '%d'" +
-					" AND candidate_id = '%d'", (election, userid, timestamp))
+		cur.execute("UPDATE electionData SET num_votes=num_votes+1 WHERE election_id = %d" +
+					" AND candidate_id = %d", [election, userid])
 		result = cur.fetchall()
 
 		#add voter to the voterHistory table with voted=1
 		cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp, voted) VALUES" +
-					" ('%d', '%d', '%s', 1)'", (election, userid, timestamp))
+					" (%d, %d, %s, 1)'", [election, userid, timestamp])
 		result = cur.fetchall()
 	else: #failed vote
 		#add the vote to voterHistory table but set the voted value to false
 		cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp, voted) VALUES" +
-					" ('%d', '%d', '%s', 0)'", (election, userid, timestamp))
+					" (%d, %d, %s, 0)'", [election, userid, timestamp])
 		result = cur.fetchall()
 
 	mutex.release()
@@ -135,8 +135,8 @@ def vote(election, candidate=None, voted=True, userid=""):
 
 #check if a given user voted in a given election already
 def votedAlready(election, userid, cur):
-	cur.execute("SELECT * FROM electionHistory WHERE election_id = '%d' AND voter_id = '%s'",
-				(election, userid))
+	cur.execute("SELECT * FROM electionHistory WHERE election_id = %d AND voter_id = %s",
+				[election, userid])
 	result = cur.fetchall()
 
 	#they have voted before in this election bc they exist in the electionHistory table
@@ -150,7 +150,7 @@ def validElectionID(num):
 	if num.isdigit():
 		#make sure value of num references a valid election before returning true
 		cur = db.connection.cursor()
-		cur.execute("SELECT * FROM table WHERE election_id = '%d'", (num))
+		cur.execute("SELECT * FROM table WHERE election_id = %d", [num])
 		result = cur.fetchall()
 
 		if len(result) > 0:
@@ -165,7 +165,7 @@ def validCandidateID(election, candidate):
 		#if we just keep real candidate id throughout everything, we shouldn't need this and
 		#everything else should be easier
 		cur = db.connection.cursor()
-		cur.execute("SELECT * FROM table WHERE election_id = '%d'", (num))
+		cur.execute("SELECT * FROM table WHERE election_id = %d", num)
 		result = cur.fetchall()
 
 		#candidate can be from 0 up to n-1 (indexing from 0)
@@ -184,8 +184,8 @@ def electionActive(election, curTime):
 def getCandidates(election):
 	#get cursor and data from table
 	cur = db.connection.cursor()
-	cur.execute("SELECT candidate_id FROM electionData WHERE election_id = '%s' ORDER BY" +
-				" firstname", (election))
+	cur.execute("SELECT candidate_id FROM electionData WHERE election_id = %s ORDER BY" +
+				" firstname", [election])
 	result = cur.fetchall()
 
 	#process results
@@ -196,8 +196,8 @@ def getCandidates(election):
 def getCandidateVotes(election, candidate):
 	#get cursor and number of votes for given candidate
 	cur = db.connection.cursor()
-	cur.execute("SELECT num_votes FROM electionData WHERE election_id = '%s' AND candidate_id =" +
-				" '%s'", (election, candidate))
+	cur.execute("SELECT num_votes FROM electionData WHERE election_id = %s AND candidate_id =" +
+				" %s", [election, candidate])
 	result = cur.fetchall()
 
 	#process results
@@ -211,11 +211,11 @@ def getVoters(election):
 	#get cursor and data from table
 	cur = db.connection.cursor()
 	#get those who voted
-	cur.execute("SELECT * FROM voterHistory WHERE election = '%s' AND voted = 1", (election))
+	cur.execute("SELECT * FROM voterHistory WHERE election = %s AND voted = 1", [election])
 	result = cur.fetchall()
 
 	#get those who didn't vote
-	cur.execute("SELECT * FROM voterHistory WHERE election = '%s' AND voted = 0", (election))
+	cur.execute("SELECT * FROM voterHistory WHERE election = %s AND voted = 0", [election])
 	result2 = cur.fetchall()
 
 	#process results from result and result2
