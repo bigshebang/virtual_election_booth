@@ -20,8 +20,8 @@ def election_page():
 	#we should be able to do a drop down on the page and use the IDs of the elections to choose
 	#which one we want to display
 	if "election" in request.form.keys():
-		if validElectionID(request.form["election"]):
-			curElection = request.form["election"]
+		if validElectionID(request.args.get("election")):
+			curElection = request.args.get("election")
 		else: #election id isn't a number
 			error = "Election must be a number."
 			return render_template("election.html", logged_in=True, show_results=getCurElection(),
@@ -42,7 +42,7 @@ def election_page():
 								results=[candidates, votes], voted=voted, notVoted=notVoted)
 	else: #election not found, return to home page
 		 #they gave us an id to find a given election but we didn't find it
-		if request.form["election"]:
+		if request.args.get("election"):
 			error = "Election not found."
 			curElection = getCurElection() #need to check if there's an election today
 		else: #there isn't an election today
