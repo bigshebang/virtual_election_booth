@@ -31,12 +31,11 @@ def election_page():
 	
 	if curElection:
 		candidates = getCandidates(curElection) #get candidates in election
-		raise
 		#get votes for each candidate
 		results = []
 		for c,cid in candidates:
 			votes = getCandidateVotes(curElection, cid)
-			results.append(c, votes)
+			results.append((c, votes))
 
 		voted, notVoted = getVoters(curElection)
 		return render_template("election.html", logged_in=True, show_results=True,
