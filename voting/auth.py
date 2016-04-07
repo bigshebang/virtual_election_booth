@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, abort, session, Blueprint
-from flask.ext.hashing import Hashing
 import re
-from voting.utils import loggedIn, getCurElection, validAge, db, tryLogin
+from voting.utils import loggedIn, getCurElection, validAge, db, tryLogin, hashPass
 
 auth = Blueprint('auth', __name__)
 
@@ -107,16 +106,6 @@ def registerUser(data):
 		return True
 	else:
 		return False
-
-#hash password with a static salt and dynamic salt of the username
-#use sha512 with 1,000,000 rounds for the securities
-def hashPass(plainPass, username):
-	#hash password through sha512 with 1 million rounds.
-	#static salt of 20 random characters, dynamic salt of the username
-	staticSalt = "r!6bCZ&2e7a28d6dfE0c"
-	shaHasher = Hashing()
-	h = shaHasher.hash_value(plainPass, salt=username+staticSalt)
-	return h
 
 #get data about the given user and put it into the session data
 def setupSession(username, ssn=None, first=None, last=None):
