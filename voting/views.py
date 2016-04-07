@@ -84,7 +84,7 @@ def vote_page():
 					vote(curElection, voted=False, userid=session["id"])
 				else:
 					candidate = request.form["candidate"][-1] #get the candidate temp ID
-					vote(curElection, candidate=candidates[candidate], userid=session["id"])
+					result = vote(curElection, candidate=candidates[candidate], userid=session["id"])
 
 			if result: #vote is valid
 				return render_template("vote.html", logged_in=True, voted=True, show_results=True)
@@ -125,6 +125,7 @@ def vote(election, candidate=None, voted=True, userid=""):
 		cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp, voted) VALUES" +
 					" (%d, %d, %s, 1)'", [election, userid, timestamp])
 		result = cur.fetchall()
+		return True
 	else: #failed vote
 		#add the vote to voterHistory table but set the voted value to false
 		cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp, voted) VALUES" +
@@ -197,6 +198,7 @@ def getElections():
 
 #return a list of the candidates running in the given election
 #this MUST be ordered alphabetically by first name
+# return list of tuples (candidate name, id)
 def getCandidates(election):
 	#get cursor and data from table
 	cur = db.connection.cursor()
@@ -209,7 +211,7 @@ def getCandidates(election):
 		cur.execute("SELECT firstname, lastname FROM candidates WHERE candidate_id = %s", [candidate_id])
 		res = cur.fetchall()
 		candidate_name = res[0][0] + " " + res[0][1]
-		candidates.append(candidate_name, candidate_id)
+		candidates.append((candidate_name, candidate_id))
 	return candidates
 
 #get the number votes for a given candidate in a given election
