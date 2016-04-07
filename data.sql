@@ -19,3 +19,8 @@ INSERT INTO candidates (ssn, firstname, lastname, politicalParty) VALUES("443-09
 # Adding fake elections
 INSERT INTO elections (name, location, start_date, end_date, position) VALUES ("President", "USA", "2016-04-01 12:00:00", "2016-04-30 12:00:00", "President");
 
+# Adding fake election info
+INSERT INTO electionData (election_id, candidate_id, num_votes) VALUES (1,1,4);
+INSERT INTO electionData (election_id, candidate_id, num_votes) VALUES (1,2,1);
+INSERT INTO electionData (election_id, candidate_id, num_votes) VALUES (1,3,7);
+INSERT INTO electionData (election_id, candidate_id, num_votes) VALUES (1,4,5);
