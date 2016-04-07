@@ -136,8 +136,8 @@ def setupSession(username, ssn=None, first=None, last=None):
 		userData = getUserData(session["username"])
 
 	session["id"] = userData["id"]
-	session["firstname"] = userData["firstname"]
-	session["lastname"] = userData["lastname"]
+	session["firstname"] = userData["first"]
+	session["lastname"] = userData["last"]
 
 #get certain user data and return in a dictionary
 def getUserData(username):
@@ -148,8 +148,8 @@ def getUserData(username):
 	result = cur.fetchall()
 
 	data["id"] = "id"
-	data["firstname"] = "firstname"
-	data["lastname"] = "lastname"
+	data["first"] = "firstname"
+	data["last"] = "lastname"
 	return data
 
 #validate an SSN. return True if valid and False if not
@@ -170,6 +170,9 @@ def validSSN(ssn):
 #also do a database check to make sure the username isn't taken
 def validUsername(user):
 	if user:
+        # Annoying AF for testing 
+        # we can probably take it out all together just username check should be fine
+        '''
 		underscore = 0
 		dash = 0
 		letters = 0
@@ -187,7 +190,7 @@ def validUsername(user):
 			#if too many dashes or underscores
 			if dash > 1 or underscore > 1 or letters < 1:
 				return False
-
+        '''
 		#see if username already exists
 		cur = db.connection.cursor()
 		cur.execute("SELECT * FROM voters WHERE username = %s", [user])
