@@ -189,12 +189,10 @@ def getElections():
     cur = db.connection.cursor()
     cur.execute("SELECT election_id, name FROM elections")
     results = cur.fetchall()
-	ids = []
-	names = []
-	for (i, name) in results:
-		ids.append(i)
-		names.append(names)
-	return (ids, names)
+	prior_elections = [] # list of tuples (eid, name)
+	for (eid, name) in results:
+		prior_elections.append((eid,name))
+	return prior_elections
 
 #return a list of the candidates running in the given election
 #this MUST be ordered alphabetically by first name
