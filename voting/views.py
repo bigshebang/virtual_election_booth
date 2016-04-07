@@ -188,8 +188,12 @@ def electionActive(election, curTime):
 def getElections():
     cur = db.connection.cursor()
     cur.execute("SELECT election_id, name FROM elections")
-    result = cur.fetchall()
-    raise
+    results = cur.fetchall()
+	ids = []
+	names = []
+	for (i, name) in results:
+		ids.append(i)
+		names.append(names)
 	return (ids, names)
 
 #return a list of the candidates running in the given election

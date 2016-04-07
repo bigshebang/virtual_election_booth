@@ -95,7 +95,7 @@ def registerUser(data):
 	#get cursor and add user to voters table
 	cur = db.connection.cursor()
     # check current number of users 
-    cur.execute("SELECT * from voters;")
+    cur.execute("SELECT * from voters")
     numVoters = len(cur.fetchall())
 
     # register new user
