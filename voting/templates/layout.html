@@ -18,6 +18,11 @@
 					{% endif %}
 					<li {% block end_active %}{% endblock %}><a href='election'>Election Results</a></li>
 				</ul>
+				{% if logged_in %}
+				<ul class='logout-nav'>
+					<li><a href='/logout'>Logout</a></li>
+				</ul>
+				{% endif %}
 			</nav>
 		</header>
 		<main>
