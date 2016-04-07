@@ -25,7 +25,7 @@ ul.main-nav{
 	float: left;
 }
 
-ul.login-nav{
+ul.logout-nav{
 	float: right;
 }
 
@@ -50,7 +50,7 @@ nav a{
 	height: inherit;
 }
 
-a:hover{
+nav a:hover{
 	background-color: #9203ff;
 	border-bottom: 1px solid #9203ff;
 }
