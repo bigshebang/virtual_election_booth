@@ -13,7 +13,7 @@ CREATE TABLE voterHistory(
 
 CREATE TABLE voters(
 	ssn char(11), # XXX-XX-XXXX
-	voter_id int,
+	voter_id int AUTO_INCREMENT,
 	username varchar(50),
 	password char(128),
 	firstname varchar(50),
@@ -23,7 +23,7 @@ CREATE TABLE voters(
 	phoneNumber varchar(12), # XXX-XXX-XXXX
 	politicalParty varchar(100),
 	isAdmin int(1) DEFAULT 0,
-	PRIMARY KEY (ssn)
+	PRIMARY KEY (voter_id)
 );
 
 CREATE TABLE electionData(
@@ -34,23 +34,24 @@ CREATE TABLE electionData(
 );
 
 CREATE TABLE elections(
-	election_id int,
+	election_id int AUTO_INCREMENT,
 	name varchar(50),
 	location varchar(100),
 	start_date datetime, # YYYY-MM-DD HH:MI:SS
 	end_date datetime, # YYYY-MM-DD HH:MI:SS
 	position varchar(50),
+    PRIMARY_KEY(election_id),
 	FOREIGN KEY (election_id) REFERENCES voterHistory(election_id),
 	FOREIGN KEY (election_id) REFERENCES electionData(election_id)
 );
 
 CREATE TABLE candidates(
 	ssn char(11), # XXX-XX-XXXX
-	candidate_id int,
+	candidate_id int AUTO_INCREMENT,
 	firstname varchar(50),
 	lastname varchar(50),
 	politicalParty varchar(100),
-	PRIMARY KEY (ssn)
+	PRIMARY KEY (candidate_id)
 );
 
 #remove old user and recreate
