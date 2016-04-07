@@ -3,9 +3,9 @@
 {% block home_active %}class='active'{% endblock %}
 {% block content %}
 	<section>
+		{% if not logged_in %}
 		<p>Welcome to Election Central! Please <a href='register'>register</a> or log in.</p>
 		<div class='form'>
-			{% if not logged_in %}
 			<form name='loginForm' method='post' action='/'>
 				<div class='row'>
 					<label for='username'>Username:</label>
@@ -24,13 +24,13 @@
 				</div>
 				{% endif %}
 			</form>
-			{% elif voted and election_happening %}
-				You have cast a vote in the current election.
-			{% elif election_happening %}
-				You have yet to vote in today's election.
-			{% else %}
-				There are no elections currently in progress.
-			{% endif %}
 		</div>
+		{% elif voted and election_happening %}
+			<p>You have cast a vote in the current election.</p>
+		{% elif election_happening %}
+			<p>You have yet to vote in today's election.</p>
+		{% else %}
+			<p>There are no elections currently in progress.</p>
+		{% endif %}
 	</section>
 {% endblock %}
