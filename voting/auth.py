@@ -44,7 +44,7 @@ def register_page():
 			#setup session and bring em back to the home page
 			setupSession(request.form["username"], ssn=request.form["ssn"],
 						 first=request.form["first"], last=request.form["last"])
-			return redirect("/")
+			return render_template("index.html", logged_in=True) 
 		else: #failed registration
 			if not error:
 				error = "Registration failed. Please try again."
