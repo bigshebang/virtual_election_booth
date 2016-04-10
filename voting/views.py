@@ -59,8 +59,8 @@ def vote_page():
 		curElection = getCurElection()
 		if curElection:
 			candidates = getCandidates(curElection)
-			return render_template("vote.html", logged_in=True, show_results=True,
-									listLen=len(candidates), candidates=candidates)
+			return render_template("vote.html", logged_in=True, election_happening=True,
+									listLen=len(candidates), candidates=candidates, voted=False)
 	elif request.method == "POST":
 		#user voted, now we need to process the data if there's an election today
 		curElection = getCurElection()
