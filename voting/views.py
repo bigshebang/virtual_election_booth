@@ -197,20 +197,20 @@ def getElections():
 
 #return a list of the candidates running in the given election
 #this MUST be ordered alphabetically by first name
-# return list of tuples (candidate name, id)
+# return list of tuples (id, candidate name, position)
 def getCandidates(election):
 	#get cursor and data from table
 	cur = db.connection.cursor()
 	# if we want to do ORDER BY we have to use a union or join b\c electionData doesnt have a firstname field 
 	# cur.execute("SELECT candidate_id FROM electionData WHERE election_id = %s ORDER BY firstname", [election])
-	cur.execute("SELECT candidate_id FROM electionData WHERE election_id = %s", [election])
+	cur.execute("SELECT candidate_id, position FROM electionData JOIN elections ON electionData.election_id = elections.election_id WHERE election_id = %s", [election])
 	results = cur.fetchall()
 	candidates = []
-	for candidate_id in results:
+	for candidate_id, position in results:
 		cur.execute("SELECT firstname, lastname FROM candidates WHERE candidate_id = %s", [candidate_id])
 		res = cur.fetchall()
 		candidate_name = res[0][0] + " " + res[0][1]
-		candidates.append((candidate_name, candidate_id))
+		candidates.append((candidate_id, candidate_name, position))
 	return candidates
 
 #get the number votes for a given candidate in a given election
