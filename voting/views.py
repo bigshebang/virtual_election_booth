@@ -76,7 +76,7 @@ def vote_page():
 			data = {"username" : session["username"], "password" : request.form["password"]}
 			if not tryLogin(data):
 				error = "Invalid password."
-			elif not validCandidateID(curElection, request.form["candidate"]):
+			elif not validCandidateID(curElection, candidate_id): 
 				error = "Invalid candidate ID given. Voter fraud detected - not counting vote."
 			else:
 				result = vote(curElection, candidate_id, userid=session["id"])
@@ -203,7 +203,7 @@ def getCandidates(election):
 		cur.execute("SELECT firstname, lastname FROM candidates WHERE candidate_id = %s", [candidate_id])
 		res = cur.fetchall()
 		candidate_name = res[0][0] + " " + res[0][1]
-		candidates.append((candidate_id[1:2], candidate_name))
+		candidates.append((int(candidate_id[0]), candidate_name))
 	return candidates
 
 #get the number votes for a given candidate in a given election
