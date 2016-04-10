@@ -132,7 +132,7 @@ def vote(election, candidate=None, voted=True, userid=""):
 
 #check if a given user voted in a given election already
 def votedAlready(election, userid, cur):
-	cur.execute("SELECT * FROM electionHistory WHERE election_id = %s AND voter_id = %s",
+	cur.execute("SELECT * FROM voterHistory WHERE election_id = %s AND voter_id = %s",
 				[election, userid])
 	result = cur.fetchall()
 
