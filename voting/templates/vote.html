@@ -3,7 +3,7 @@
 {% block vote_active %}class='active'{% endblock %}
 {% block content %}
 	{% if logged_in and election_happening and not voted %}
-		<form name='voteForm' method='post'>
+		<form name='voteForm' method='post' action='vote'>
 			<h1>Select one (1) candidate from the following:</h1>
 			{% for cid, candidate in ticket: %}
 			<input type='radio' name='candidate' id='{{ cid }}'>
