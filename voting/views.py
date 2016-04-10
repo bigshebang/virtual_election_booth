@@ -82,7 +82,7 @@ def vote_page():
 				result = vote(curElection, candidate_id, userid=session["id"])
 
 			if result: #vote is valid
-				return render_template("vote.html", logged_in=True, voted=True, show_results=True)
+				return render_template("index.html", logged_in=True, voted=True, election_happening=curElection) 
 			else: #vote is invalid
 				if not error:
 					error = "There was a problem with your vote. Please try again."
