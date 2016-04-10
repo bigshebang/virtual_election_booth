@@ -1,14 +1,26 @@
 {% extends "layout.html" %}
 {% block title %}Election Central Ballot{% endblock %}
 {% block vote_active %}class='active'{% endblock %}
+{% block script %}
+<script>
+	function confirm(frm){
+		if(frm.elements['password'].value.length == 0){
+			alert('Please enter your password');
+			return false;
+		}
+		return true;
+	}
+</script>
+{% endblock %}
 {% block content %}
 	{% if logged_in and election_happening and not voted %}
-		<form name='voteForm' method='post' action='vote'>
+		<form name='voteForm' method='post' action='vote' onSubmit='confirm(this);'>
 			<h1>Select one (1) candidate from the following:</h1>
 			{% for cid, candidate in ticket: %}
 			<input type='radio' name='candidate' id='{{ cid }}' value='{{ cid }}'>
 			<label for='{{ cid }}'>{{ candidate }}</label>
 			{% endfor %}
+			<input type='password' name='password' size='25' maxlength='100' placeholder='Enter your password here'>
 			<input type='submit' value='Cast'/>
 		</form>
 	{% elif not election_happening %}
