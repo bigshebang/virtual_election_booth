@@ -30,4 +30,7 @@
 	{% else %}
 		<script>alert('You have already voted in the current election. You cannot vote twice.');history.back();</script>
 	{% endif %}
+	{% if error %}
+		<span class='error'>{{ error }}</span>
+	{% endif %}
 {% endblock %}
