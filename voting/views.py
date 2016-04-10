@@ -71,19 +71,14 @@ def vote_page():
 
 			error = None
 			result = False
+            candidate_id = request.form["candidate"]
 			#user should also put their password in to vote
 			if not tryLogin(session["username"], request.form["password"]):
 				error = "Invalid password."
 			elif not validCandidateID(curElection, request.form["candidate"]):
 				error = "Invalid candidate ID given. Voter fraud detected - not counting vote."
 			else:
-				#if candidate id is out of bounds for this election then this is a malicious voting
-				#attempt. don't count the vote, but record the invalid vote.
-				if candidate >= len(candidates):
-					vote(curElection, voted=False, userid=session["id"])
-				else:
-					candidate = request.form["candidate"][-1] #get the candidate temp ID
-					result = vote(curElection, candidate=candidates[candidate], userid=session["id"])
+                result = vote(curElection, candidate_id, userid=session["id"])
 
 			if result: #vote is valid
 				return render_template("vote.html", logged_in=True, voted=True, show_results=True)
@@ -117,7 +112,7 @@ def vote(election, candidate=None, voted=True, userid=""):
 		#should we wrap all of the mysql statements in try/catch blocks in case there's an error?
 		#update electionData by adding 1 to the vote count for the given condition
 		cur.execute("UPDATE electionData SET num_votes=num_votes+1 WHERE election_id = %d" +
-					" AND candidate_id = %d", [election, userid])
+					" AND candidate_id = %d", [election, candidate])
 		result = cur.fetchall()
 
 		#add voter to the voterHistory table with voted=1
@@ -202,15 +197,15 @@ def getCandidates(election):
 	#get cursor and data from table
 	cur = db.connection.cursor()
 	# if we want to do ORDER BY we have to use a union or join b\c electionData doesnt have a firstname field 
-	# cur.execute("SELECT candidate_id FROM electionData WHERE election_id = %s ORDER BY firstname", [election])
-	cur.execute("SELECT candidate_id, position FROM electionData JOIN elections ON electionData.election_id = elections.election_id WHERE electionData.election_id = %s", [election])
+	# cur.execute("SELECT candidate_id, positio FROM electionData JOIN elections ON electionData.election_id = elections.election_id WHERE electionData.election_id = %s", [election])
+	cur.execute("SELECT candidate_id FROM electionData WHERE election_id = %s", [election])
 	results = cur.fetchall()
 	candidates = []
-	for candidate_id, position in results:
+	for candidate_id in results:
 		cur.execute("SELECT firstname, lastname FROM candidates WHERE candidate_id = %s", [candidate_id])
 		res = cur.fetchall()
 		candidate_name = res[0][0] + " " + res[0][1]
-		candidates.append((candidate_id, candidate_name, position))
+		candidates.append((candidate_id, candidate_name))
 	return candidates
 
 #get the number votes for a given candidate in a given election
