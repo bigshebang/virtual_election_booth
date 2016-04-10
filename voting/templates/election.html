@@ -15,7 +15,6 @@
 		</form>
 	</div>
 	{% endif %}
-	{% if results %}
 	<div class='results'>
 		<table>
 			<tr colspan='2'>
@@ -25,15 +24,14 @@
 				<th>Candidate</th>
 				<th>Votes Received</th>
 			</tr>
-			{% for candidate, total in results: %}
+		{% for candidate, total in results: %}
 			<tr>
 				<td>{{ candidate }}</td>
 				<td>{{ total }}</td>
 			</tr>
-			{% endfor %}
+		{% endfor %}
 		</table>
 	</div>
-	{% endif %}
 	{% if voters %}
 	<div class='voters'>
 		<ul>
