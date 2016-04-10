@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, abort, session, Blueprint
 # from flask.ext.mysqldb import MySQL
 from threading import Lock
-from voting.utils import loggedIn, getCurElection, getLastElection, tryLogin, getDBTimestamp, getUnixTimestamp, db
+from voting.utils import loggedIn, getCurElection, getLastElection, tryLogin, getDBTimestamp, getUnixTimestamp, db, getCurTime
 
 views = Blueprint('views', __name__)
 mutex = Lock()
