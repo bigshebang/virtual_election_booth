@@ -87,7 +87,7 @@ def vote_page():
 				if not error:
 					error = "There was a problem with your vote. Please try again."
 
-				return render_template("vote.html", logged_in=True, error=error, show_results=True)
+				return render_template("vote.html", logged_in=True, error=error, election_happening=True)
 
 	#there is no election today
 	return render_template("vote.html", logged_in=True, show_results=False)
