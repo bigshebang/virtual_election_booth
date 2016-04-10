@@ -14,6 +14,7 @@
 			<label for='{{ cid }}'>{{ candidate }}</label>
 				{% set old_position = position %}
 			{% endfor %}
+			<input type='submit' value='Cast'/>
 		</form>
 	{% elif not election_happening %}
 		<script>alert('There are no elections in progress.');history.back();</script>
