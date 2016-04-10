@@ -166,13 +166,10 @@ def validCandidateID(election, candidate):
 		#if we just keep real candidate id throughout everything, we shouldn't need this and
 		#everything else should be easier
 		cur = db.connection.cursor()
-		cur.execute("SELECT * FROM electionData WHERE election_id = %s", [election])
+		cur.execute("SELECT * FROM electionData WHERE election_id = %s and candidate_id = %s", [election, candidate])
 		result = cur.fetchall()
-
-		#candidate can be from 0 up to n-1 (indexing from 0)
-		if candidate >= 0 and candidate < len(result):
+		if result:
 			return True
-
 	return False
 
 #given an election and current time, see if that election is still active
