@@ -44,7 +44,7 @@ def register_page():
 			#setup session and bring em back to the home page
 			setupSession(request.form["username"], ssn=request.form["ssn"],
 						 first=request.form["first"], last=request.form["last"])
-			return render_template("index.html", logged_in=True) 
+			return render_template("index.html", logged_in=True, election_happening=getCurElection())) 
 		else: #failed registration
 			if not error:
 				error = "Registration failed. Please try again."
@@ -72,13 +72,13 @@ def login():
 	if result: #valid login
 		#get and setup various session data
 		setupSession(request.form["username"])
-		
-		return render_template("index.html", logged_in=True, show_results=curElection)
+		# check if voted!!!	
+		return render_template("index.html", logged_in=True, election_happening=curElection)
 	else: #failed login
 		if not error:
 			error = "Invalid username/password combination. Try again."
 
-		return render_template("index.html", error=error, logged_in=False, show_results=curElection)
+		return render_template("index.html", error=error, logged_in=False)
 
 @auth.route("/logout")
 def logout():
