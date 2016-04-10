@@ -71,14 +71,14 @@ def vote_page():
 
 			error = None
 			result = False
-            candidate_id = request.form["candidate"]
+		    	candidate_id = request.form["candidate"]
 			#user should also put their password in to vote
 			if not tryLogin(session["username"], request.form["password"]):
 				error = "Invalid password."
 			elif not validCandidateID(curElection, request.form["candidate"]):
 				error = "Invalid candidate ID given. Voter fraud detected - not counting vote."
 			else:
-                result = vote(curElection, candidate_id, userid=session["id"])
+				result = vote(curElection, candidate_id, userid=session["id"])
 
 			if result: #vote is valid
 				return render_template("vote.html", logged_in=True, voted=True, show_results=True)
