@@ -205,7 +205,7 @@ def getCandidates(election):
 		cur.execute("SELECT firstname, lastname FROM candidates WHERE candidate_id = %s", [candidate_id])
 		res = cur.fetchall()
 		candidate_name = res[0][0] + " " + res[0][1]
-		candidates.append((candidate_id, candidate_name))
+		candidates.append((candidate_id[1:2], candidate_name))
 	return candidates
 
 #get the number votes for a given candidate in a given election
