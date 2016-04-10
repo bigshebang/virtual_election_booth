@@ -100,3 +100,7 @@ div.voters{
 	width: 50%;
 	float: right;
 }
+
+span.error{
+	color: red !important;
+}
