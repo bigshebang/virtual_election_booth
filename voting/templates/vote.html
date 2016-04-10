@@ -4,15 +4,10 @@
 {% block content %}
 	{% if logged_in and election_happening and not voted %}
 		<form name='voteForm' method='post'>
-			{% set old_position = "" %}
-			{% for cid, candidate, position in ticket: %}
-				{% if old_position != position %}
-					<h1>Select one (1) candidate from the following:</h1>
-					<h1>{{ position }}</h1>
-				{% endif %}
+			<h1>Select one (1) candidate from the following:</h1>
+			{% for cid, candidate in ticket: %}
 			<input type='radio' name='candidate' id='{{ cid }}'>
 			<label for='{{ cid }}'>{{ candidate }}</label>
-				{% set old_position = position %}
 			{% endfor %}
 			<input type='submit' value='Cast'/>
 		</form>
