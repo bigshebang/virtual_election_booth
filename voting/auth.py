@@ -94,11 +94,11 @@ def registerUser(data):
 
 	#get cursor and add user to voters table
 	cur = db.connection.cursor()
-    # check current number of users 
-    cur.execute("SELECT * from voters")
-    numVoters = len(cur.fetchall())
+    	# check current number of users 
+	cur.execute("SELECT * from voters")
+	numVoters = len(cur.fetchall())
 
-    # register new user
+    	# register new user
 	cur.execute("INSERT INTO voters (ssn, username, password, firstname, lastname, birthday, " +
 				"address, phoneNumber, politicalParty) VALUES (%s, %s, %s, %s, %s, " +
 				"%s, %s, %s, %s)", [data['ssn'], data['username'], password,
@@ -106,13 +106,13 @@ def registerUser(data):
 				data['party']])
 	db.connection.commit()
 
-    # check new number of users 
-    # should be 1 more than previous, means registration successful 
-    cur.execute("SELECT * from voters;")
-    newNumVoters = len(cur.fetchall())
+    	# check new number of users 
+    	# should be 1 more than previous, means registration successful 
+    	cur.execute("SELECT * from voters;")
+    	newNumVoters = len(cur.fetchall())
 
-    # since its an insert idk if there will be any results 
-    # might have to do select before and after, then compare 
+    	# since its an insert idk if there will be any results 
+    	# might have to do select before and after, then compare 
 	if (numVoters + 1) == newNumVoters:  
 		return True
 	else:
