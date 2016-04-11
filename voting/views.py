@@ -21,11 +21,12 @@ def election_page():
 	#get all previous election IDs and names
 	prior = getElections()
 
-	if "election" in request.form.keys():
-		if validElectionID(request.args.get("election")):
-			curElection = request.args.get("election")
+	if "prior_election" in request.form.keys():
+		prior_election = request.args.get("prior_election")
+		if validElectionID(prior_election):
+			curElection = prior_election
 		else: #election id isn't a number
-			error = "Election must be a number."
+			error = "Election must be a valid number."
 			return render_template("election.html", logged_in=True, prior_elections=prior,
 									show_results=getCurElection(), error=error)
 	else:
@@ -62,8 +63,10 @@ def vote_page():
 
 	if request.method == "GET":
 		curElection = getCurElection()
+
 		if curElection:
 			voted = votedAlready(curElection, session["id"])
+
 			if not voted: #didn't vote yet
 				candidates = getCandidates(curElection)
 				return render_template("vote.html", logged_in=True, election_happening=True,
@@ -195,11 +198,6 @@ def validCandidateID(election, candidate):
 			return True
 	return False
 
-#given an election and current time, see if that election is still active
-#WE MAY NOT NEED THIS
-def electionActive(election, curTime):
-	return True
-
 #get and return all of the election IDs and names for elections that are over
 def getElections():
 	timestamp = getDBTimestamp(getCurTime()) #get today in mysql datetime format
@@ -215,7 +213,6 @@ def getElections():
 	return prior_elections
 
 #return a list of the candidates running in the given election
-#this MUST be ordered alphabetically by first name
 # return list of tuples (id, candidate name, position)
 def getCandidates(election):
 	#get cursor and data from table
