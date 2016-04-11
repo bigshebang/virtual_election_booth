@@ -9,7 +9,7 @@ mutex = Lock()
 @views.route("/", methods=["GET"])
 def home():
 	election_happening = getCurElection()
-	voted = votedAlready(election_happening, session["id"], db.connection.cursor())
+	voted = votedAlready(election_happening, session["id"])
 	return render_template("index.html", logged_in=loggedIn(), voted=voted,
 						   election_happening=election_happening)
 
@@ -60,41 +60,47 @@ def vote_page():
 	if request.method == "GET":
 		curElection = getCurElection()
 		if curElection:
-			candidates = getCandidates(curElection)
-			return render_template("vote.html", logged_in=True, election_happening=True,
-									listLen=len(candidates), ticket=candidates, voted=False)
+			if not votedAlready(curElection, session["id"]): #didn't vote yet
+				candidates = getCandidates(curElection)
+				return render_template("vote.html", logged_in=True, election_happening=True,
+										listLen=len(candidates), ticket=candidates, voted=False)
+			else: #already voted
+				return render_template("vote.html", logged_in=True, election_happening=True,
+										voted=True)
 	elif request.method == "POST":
 		#user voted, now we need to process the data if there's an election today
 		curElection = getCurElection()
 
 		#when this if statement is true, the election being voted in today is valid
 		if curElection:
-			candidates = getCandidates(curElection)
+			if not votedAlready(election, session["id"]): #make sure they didn't vote yet
+				candidates = getCandidates(curElection)
 
-			error = None
-			result = False
+				error = None
+				result = False
 		    	candidate_id = request.form["candidate"]
-			#user should also put their password in to vote
-			data = {"username" : session["username"], "password" : request.form["password"]}
-			if not tryLogin(data):
-				error = "Invalid password."
-			elif not validCandidateID(curElection, candidate_id): 
-				error = "Invalid candidate ID given. Voter fraud detected - not counting vote."
-			else:
-				result = vote(curElection, candidate_id, userid=session["id"])
+				#user should also put their password in to vote
+				data = {"username" : session["username"], "password" : request.form["password"]}
+				if not tryLogin(data):
+					error = "Invalid password."
+				elif not validCandidateID(curElection, candidate_id): 
+					error = "Invalid candidate ID given. Voter fraud detected - not counting vote."
+				else:
+					result = vote(curElection, candidate_id, userid=session["id"])
 
-			if result: #vote is valid
-				return render_template("index.html", logged_in=True, voted=True,
-									   election_happening=curElection) 
-			else: #vote is invalid
-				if not error:
-					error = "There was a problem with your vote. Please try again."
+				if result: #vote is valid
+					return render_template("index.html", logged_in=True, voted=True,
+										   election_happening=curElection)
+				else: #vote is invalid
+					if not error:
+						error = "There was a problem with your vote. Please try again."
 
-				return render_template("vote.html", logged_in=True, error=error,
-									   election_happening=True)
+					return render_template("vote.html", logged_in=True, error=error, voted=False
+										   election_happening=True)
 
 	#there is no election today
-	return render_template("vote.html", logged_in=True, show_results=False)
+	return render_template("vote.html", logged_in=True, election_happening=True,
+						   voted=True)
 
 #perform the vote by updating database. return true if successful, false if not
 def vote(election, candidate=None, voted=True, userid=""):
@@ -109,7 +115,8 @@ def vote(election, candidate=None, voted=True, userid=""):
 		cur = db.connection.cursor() #get our mysql cursor
 
 		#if user already voted in this election, release mutex and return false
-		if votedAlready(election, userid, cur):
+		#we're checking this before calling this functino so we should be able to remove this
+		if votedAlready(election, userid):
 			mutex.release()
 			return False
 
@@ -139,7 +146,8 @@ def vote(election, candidate=None, voted=True, userid=""):
 	return False
 
 #check if a given user voted in a given election already
-def votedAlready(election, userid, cur):
+def votedAlready(election, userid):
+	cur = db.connection.cursor()
 	cur.execute("SELECT * FROM voterHistory WHERE election_id = %s AND voter_id = %s",
 				[election, userid])
 	result = cur.fetchall()
