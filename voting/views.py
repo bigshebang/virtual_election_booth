@@ -266,7 +266,7 @@ def getVoters(election_id):
 	result = cur.fetchall()
 
 	for voter in result:
-		voter_name = voter[0][0] + " " + voter[0][1]
+		voter_name = voter[0] + " " + voter[1]
 		voted.append(voter_name)
 
 	#get those who didn't vote
@@ -276,7 +276,7 @@ def getVoters(election_id):
 	result2 = cur.fetchall()
 
 	for voter in result2:
-		voter_name = voter[0][0] + " " + voter[0][1]
+		voter_name = voter[0] + " " + voter[1]
 		notVoted.append(voter_name)
 
 	#process results from result and result2
