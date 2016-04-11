@@ -24,11 +24,11 @@
 			<input type='submit' value='Cast'/>
 		</form>
 	{% elif not election_happening %}
-		<script>alert('There are no elections in progress.');history.back();</script>
+		<script>alert('There are no elections in progress.');location.assign("/");</script>
 	{% elif not logged_in %}
-		<script>alert('You must be logged in to vote.');history.back();</script>
+		<script>alert('You must be logged in to vote.');location.assign("/");</script>
 	{% else %}
-		<script>alert('You have already voted in the current election. You cannot vote twice.');history.back();</script>
+		<script>alert('You have already voted in the current election. You cannot vote twice.');location.assign("/");</script>
 	{% endif %}
 	{% if error %}
 		<span class='error'>{{ error }}</span>
