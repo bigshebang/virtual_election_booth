@@ -244,7 +244,7 @@ def getCandidateVotes(election_id, candidate_id):
 
 	#if there's a result, return it
 	if len(result) > 0:
-		return result[0]
+		return result[0][0]
 	else:
 		return 0
 
