@@ -1,7 +1,9 @@
 ######################################################################
 # script doesnt work but manually copying and pasting into sql works #
 # idk why.. sql still dumb                                           #
+# think we just needed the use ElectionCentral line                  #
 ######################################################################
+use ElectionCentral;
 
 # Adding fake voter information 
 INSERT INTO voters (ssn, username, password, firstname, lastname, birthday, address, phoneNumber, politicalParty) VALUES("123-45-6789", "user1", "wont work", "first", "last", "1990-09-09", "123 st", "111-111-1111", "party");
