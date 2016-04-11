@@ -122,7 +122,7 @@ def vote(election, candidate=None, voted=True, userid=""):
 		#if user already voted in this election, release mutex and return false
 		#we're checking this before calling this functino so we should be able to remove this
 		if votedAlready(election, userid):
-			mutex.release()
+			# mutex.release()
 			return False
 
 		#update mysql db
@@ -139,7 +139,7 @@ def vote(election, candidate=None, voted=True, userid=""):
 						" (%s, %s, %s, 1)", [election, userid, timestamp])
 			db.connection.commit()
 			result = cur.fetchall()
-			mutex.release()
+			# mutex.release()
 			return True
 		else: #failed vote
 			#add the vote to voterHistory table but set the voted value to false
