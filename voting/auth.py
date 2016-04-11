@@ -149,9 +149,9 @@ def getUserData(username):
 	cur.execute("SELECT ssn,firstname,lastname FROM voters WHERE username = %s", [username])
 	result = cur.fetchall()
 
-	data["id"] = results[0][0]
-	data["first"] = results[0][1]
-	data["last"] = results[0][2]
+	data["id"] = result[0][0]
+	data["first"] = result[0][1]
+	data["last"] = result[0][2]
 	return data
 
 #validate an SSN. return True if valid and False if not
