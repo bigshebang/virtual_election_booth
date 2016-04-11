@@ -96,7 +96,7 @@ def registerUser(data):
 
 	#get cursor and add user to voters table
 	cur = db.connection.cursor()
-    	# check current number of users 
+	# check current number of users 
 	cur.execute("SELECT * from voters")
 	numVoters = len(cur.fetchall())
 
@@ -108,13 +108,13 @@ def registerUser(data):
 				data['party']])
 	db.connection.commit()
 
-    	# check new number of users 
-    	# should be 1 more than previous, means registration successful 
-    	cur.execute("SELECT * from voters;")
-    	newNumVoters = len(cur.fetchall())
+	# check new number of users 
+	# should be 1 more than previous, means registration successful 
+	cur.execute("SELECT * from voters;")
+	newNumVoters = len(cur.fetchall())
 
-    	# since its an insert idk if there will be any results 
-    	# might have to do select before and after, then compare 
+	# since its an insert idk if there will be any results 
+	# might have to do select before and after, then compare 
 	if (numVoters + 1) == newNumVoters:  
 		return True
 	else:
@@ -172,9 +172,6 @@ def validSSN(ssn):
 #also do a database check to make sure the username isn't taken
 def validUsername(user):
 	if user:
-        # Annoying AF for testing 
-        # we can probably take it out all together just username check should be fine
-        '''
 		underscore = 0
 		dash = 0
 		letters = 0
@@ -192,7 +189,7 @@ def validUsername(user):
 			#if too many dashes or underscores
 			if dash > 1 or underscore > 1 or letters < 1:
 				return False
-        '''
+
 		#see if username already exists
 		cur = db.connection.cursor()
 		cur.execute("SELECT * FROM voters WHERE username = %s", [user])
@@ -285,9 +282,8 @@ def validPhoneNumber(number):
 #make sure birthday is valid date that is at least 18 years ago from today
 #also validate that it's in YYYY-MM-DD format
 def validBirthday(dob):
-    return True # REMOVE THIS WHEN JS ISSUE FIXED!!!!
 	if dob:
-		if re.match("^\d{4}-\d{2}-\d{2}$", dob): # YYYY-MM-DD
+		if re.match("^\d{4}-\d{1,2}-\d{1,2}$", dob): # YYYY-MM-DD
 			#make sure they're 18 or older
 			if validAge(dob):
 				return True
