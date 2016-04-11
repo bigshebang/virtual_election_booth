@@ -17,9 +17,11 @@
 	{% endif %}
 	<div class='results'>
 		<table>
+			{% if current_election %}
 			<tr colspan='2'>
-				<th>{{ election_info }}</th>
+				<th class='title'>{{ current_election }}</th>
 			</tr>
+			{% endif %}
 			<tr>
 				<th>Candidate</th>
 				<th>Votes Received</th>
@@ -32,24 +34,16 @@
 		{% endfor %}
 		</table>
 	</div>
-	{% if voted %}
+	{% if voters %}
 	<div class='voters'>
-		<p>Voted</p>
 		<ul>
-			{% for voter in voted: %}
+			{% for voter in voters: %}
 			<li>{{ voter }}</li>
 			{% endfor %}
 		</ul>
 	</div>
 	{% endif %}
-	{% if notVoted %}
-	<div class='voters'>
-		<p>Did not vote</p>
-		<ul>
-			{% for voter in notVoted: %}
-			<li>{{ voter }}</li>
-			{% endfor %}
-		</ul>
-	</div>
+	{% if error %}
+	<span class='error'>{{ error }}</span>
 	{% endif %}
 {% endblock %}
