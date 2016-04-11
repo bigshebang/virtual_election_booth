@@ -19,12 +19,6 @@ def getCurElection():
 				"ORDER BY end_date DESC LIMIT 1", [timestamp, timestamp])
 	result = cur.fetchall()
 
-	###############################################################################################
-	#THIS IS NOT DONE, NEED TO GET THE ID FROM result AND RETURN IT IN THE IF PART
-	#the above query should be good though
-	###############################################################################################
-	# I think it is done now!
-
 	election_ids = []
 	for eid in result:
 		election_ids.append(eid)
@@ -39,13 +33,9 @@ def getLastElection():
 				" LIMIT 1", [timestamp])
 	result = cur.fetchall()
 
-	###############################################################################################
-	#THIS IS NOT DONE, NEED TO GET THE ID FROM result AND RETURN IT IN THE IF PART
-	#the above query should be good though
-	###############################################################################################
-	# I think it is done now!
 	if len(result) != 0:
 		return result[0]
+
 	return None
 
 #get the current time in unix timestamp
