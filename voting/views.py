@@ -30,13 +30,13 @@ def election_page():
 									show_results=getCurElection(), error=error)
 	else:
 		curElection = getLastElection()
-	
+
 	if curElection:
 		candidates = getCandidates(curElection) #get candidates in election
 		#get votes for each candidate
 		results = []
-		for c,cid in candidates:
-			votes = int(getCandidateVotes(curElection, cid)[0])
+		for cid,c in candidates:
+			votes = int(getCandidateVotes(curElection, cid))
 			results.append((c, votes))
 
 		voted, notVoted = getVoters(curElection)
@@ -119,10 +119,9 @@ def vote(election, candidate=None, voted=True, userid=""):
 		timestamp = getDBTimestamp(getCurTime()) #get a mysql datetime value of the current datetime
 		cur = db.connection.cursor() #get our mysql cursor
 
-		#if user already voted in this election, release mutex and return false
-		#we're checking this before calling this functino so we should be able to remove this
+		#if user already voted in this election return false
+		#we're checking this before calling this function so we should be able to remove this
 		if votedAlready(election, userid):
-			# mutex.release()
 			return False
 
 		#update mysql db
@@ -139,7 +138,6 @@ def vote(election, candidate=None, voted=True, userid=""):
 						" (%s, %s, %s, 1)", [election, userid, timestamp])
 			db.connection.commit()
 			result = cur.fetchall()
-			# mutex.release()
 			return True
 		else: #failed vote
 			#add the vote to voterHistory table but set the voted value to false
@@ -203,14 +201,17 @@ def electionActive(election, curTime):
 	return True
 
 #get and return all of the election IDs and names for elections that are over
-#see getLastElection() in utils.py for help with getting an election that's over
 def getElections():
-    	cur = db.connection.cursor()
-    	cur.execute("SELECT election_id, name FROM elections")
+	timestamp = getDBTimestamp(getCurTime()) #get today in mysql datetime format
+	cur = db.connection.cursor()
+	cur.execute("SELECT election_id, name FROM elections WHERE end_date <= %s", [timestamp])
 	results = cur.fetchall()
-    	prior_elections = [] # list of tuples (eid, name)
-    	for (eid, name) in results:
+
+	#populate our data structure
+	prior_elections = [] # list of tuples (eid, name)
+	for (eid, name) in results:
 		prior_elections.append((eid,name))
+
 	return prior_elections
 
 #return a list of the candidates running in the given election
@@ -241,7 +242,11 @@ def getCandidateVotes(election_id, candidate_id):
 				" %s", [election_id, candidate_id])
 	result = cur.fetchall()
 
-	return result[0]
+	#if there's a result, return it
+	if len(result) > 0:
+		return result[0]
+	else:
+		return 0
 
 #get who did and did not vote in the given election
 #this should be sorted alphabetically
