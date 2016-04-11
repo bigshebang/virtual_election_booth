@@ -34,6 +34,7 @@
 	</div>
 	{% if voters %}
 	<div class='voters'>
+		<p>Voted</p>
 		<ul>
 			{% for voter in voted: %}
 			<li>{{ voter }}</li>
@@ -41,6 +42,7 @@
 		</ul>
 	</div>
 	<div class='voters'>
+		<p>Did not vote</p>
 		<ul>
 			{% for voter in notVoted: %}
 			<li>{{ voter }}</li>
