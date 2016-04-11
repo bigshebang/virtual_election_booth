@@ -131,12 +131,15 @@ def vote(election, candidate=None, voted=True, userid=""):
 			#update electionData by adding 1 to the vote count for the given condition
 			cur.execute("UPDATE electionData SET num_votes=num_votes+1 WHERE election_id = %s" +
 						" AND candidate_id = %s", [election, candidate])
+			db.connection.commit()
 			result = cur.fetchall()
 
 			#add voter to the voterHistory table with voted=1
 			cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp, voted) VALUES" +
 						" (%s, %s, %s, 1)", [election, userid, timestamp])
+			db.connection.commit()
 			result = cur.fetchall()
+			mutex.release()
 			return True
 		else: #failed vote
 			#add the vote to voterHistory table but set the voted value to false
