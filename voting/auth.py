@@ -121,22 +121,18 @@ def registerUser(data):
 		return False
 
 #get data about the given user and put it into the session data
-def setupSession(username, ssn=None, first=None, last=None):
+def setupSession(username):
 	try:
 		session.regenerate()
 	except:
 		pass #some objects don't have regenerate
 
+	#get relevant user data
+	userData = getUserData(session["username"])
+
 	#put username and other data into session
 	session["username"] = username
-	if ssn and first and last:
-		userData = {}
-		userData["id"] = ssn
-		userData["first"] = first
-		userData["last"] = last
-	else:
-		userData = getUserData(session["username"])
-
+	session["ssn"] = userData["ssn"]
 	session["id"] = userData["id"]
 	session["firstname"] = userData["first"]
 	session["lastname"] = userData["last"]
@@ -144,14 +140,16 @@ def setupSession(username, ssn=None, first=None, last=None):
 #get certain user data and return in a dictionary
 def getUserData(username):
 	data = {}
-	#get the id/ssn, firstname, lastname.
+	#get the ssn, id, firstname, lastname.
 	cur = db.connection.cursor()
-	cur.execute("SELECT ssn,firstname,lastname FROM voters WHERE username = %s", [username])
+	cur.execute("SELECT ssn,voter_id,firstname,lastname FROM voters WHERE username = %s",
+				[username])
 	result = cur.fetchall()
 
-	data["id"] = result[0][0]
-	data["first"] = result[0][1]
-	data["last"] = result[0][2]
+	data["ssn"] = result[0][0]
+	data["id"] = result[0][1]
+	data["first"] = result[0][2]
+	data["last"] = result[0][3]
 	return data
 
 #validate an SSN. return True if valid and False if not
