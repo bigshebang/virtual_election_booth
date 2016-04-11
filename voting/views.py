@@ -258,7 +258,7 @@ def getVoters(election_id):
 	#get cursor and data from table
 	cur = db.connection.cursor()
 	#get those who voted
-	cur.execute("SELECT firstname,lastname FROM voters WHERE voter_id in (SELECT voter_id FROM " +
+	cur.execute("SELECT firstname,lastname FROM voters WHERE voter_id IN (SELECT voter_id FROM " +
 				"voterHistory WHERE election_id = %s AND voted = 1) ORDER BY firstname,lastname",
 				[election_id])
 	result = cur.fetchall()
@@ -268,7 +268,7 @@ def getVoters(election_id):
 		voted.append(voter_name)
 
 	#get those who didn't vote
-	cur.execute("SELECT firstname,lastname FROM voters WHERE voter_id in (SELECT voter_id FROM " +
+	cur.execute("SELECT firstname,lastname FROM voters WHERE voter_id NOT IN (SELECT voter_id FROM " +
 				"voterHistory WHERE election_id = %s AND voted = 0) ORDER BY firstname,lastname",
 				[election_id])
 	result2 = cur.fetchall()
