@@ -34,7 +34,7 @@ def getLastElection():
 	result = cur.fetchall()
 
 	if len(result) != 0:
-		return result[0]
+		return result[0][0]
 
 	return None
 

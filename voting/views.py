@@ -30,7 +30,7 @@ def election_page():
 	if "prior_election" in request.args.keys():
 		prior_election = request.args.get("prior_election")
 		if validElectionID(prior_election):
-			curElection = prior_election
+			curElection = int(prior_election)
 		else: #election id isn't a number
 			error = "Election must be a valid number."
 			return render_template("election.html", logged_in=True, prior_elections=prior,
@@ -284,12 +284,11 @@ def getVoters(election_id):
 
 #given an election id, get and return the name of the election
 def getElectionName(election_id):
-	if election_id.isdigit():
-		cur = db.connection.cursor()
-		cur.execute("SELECT name FROM elections WHERE election_id = %s", [election_id])
-		results = cur.fetchall()
+	cur = db.connection.cursor()
+	cur.execute("SELECT name FROM elections WHERE election_id = %s", [election_id])
+	results = cur.fetchall()
 
-		if len(results) > 0:
-			return results[0][0]
-
-	return None
+	if len(results) > 0:
+		return results[0][0]
+	else:
+		return None
