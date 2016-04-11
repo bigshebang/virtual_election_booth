@@ -103,35 +103,39 @@ def vote(election, candidate=None, voted=True, userid=""):
 
 	mutex.acquire() #get the mutex
 
-	#prep for mysql stuff later on
-	timestamp = getDBTimestamp(getCurTime()) #get a mysql datetime value of the current datetime
-	cur = db.connection.cursor() #get our mysql cursor
+	try:
+		#prep for mysql stuff later on
+		timestamp = getDBTimestamp(getCurTime()) #get a mysql datetime value of the current datetime
+		cur = db.connection.cursor() #get our mysql cursor
 
-	#if user already voted in this election, release mutex and return false
-	if votedAlready(election, userid, cur):
+		#if user already voted in this election, release mutex and return false
+		if votedAlready(election, userid, cur):
+			mutex.release()
+			return False
+
+		#update mysql db
+		if voted:
+			#should we wrap all of the mysql statements in try/catch blocks in case there's an error?
+			#update electionData by adding 1 to the vote count for the given condition
+			cur.execute("UPDATE electionData SET num_votes=num_votes+1 WHERE election_id = %s" +
+						" AND candidate_id = %s", [election, candidate])
+			result = cur.fetchall()
+
+			#add voter to the voterHistory table with voted=1
+			cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp, voted) VALUES" +
+						" (%s, %s, %s, 1)'", [election, userid, timestamp])
+			result = cur.fetchall()
+			return True
+		else: #failed vote
+			#add the vote to voterHistory table but set the voted value to false
+			cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp, voted) VALUES" +
+						" (%s, %s, %s, 0)'", [election, userid, timestamp])
+			result = cur.fetchall()
+	except: #in case we error, we want internal server error or debugger
+		raise
+	finally: #no matter what, release mutex
 		mutex.release()
-		return False
 
-	#update mysql db
-	if voted:
-		#should we wrap all of the mysql statements in try/catch blocks in case there's an error?
-		#update electionData by adding 1 to the vote count for the given condition
-		cur.execute("UPDATE electionData SET num_votes=num_votes+1 WHERE election_id = %s" +
-					" AND candidate_id = %s", [election, candidate])
-		result = cur.fetchall()
-
-		#add voter to the voterHistory table with voted=1
-		cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp, voted) VALUES" +
-					" (%s, %s, %s, 1)'", [election, userid, timestamp])
-		result = cur.fetchall()
-		return True
-	else: #failed vote
-		#add the vote to voterHistory table but set the voted value to false
-		cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp, voted) VALUES" +
-					" (%s, %s, %s, 0)'", [election, userid, timestamp])
-		result = cur.fetchall()
-
-	mutex.release()
 	return False
 
 #check if a given user voted in a given election already
