@@ -123,7 +123,7 @@ def vote(election, candidate=None, voted=True, userid=""):
 
 			#add voter to the voterHistory table with voted=1
 			cur.execute("INSERT INTO voterHistory (election_id, voter_id, time_stamp, voted) VALUES" +
-						" (%s, %s, %s, 1)'", [election, userid, timestamp])
+						" (%s, %s, %s, 1)", [election, userid, timestamp])
 			result = cur.fetchall()
 			return True
 		else: #failed vote
