@@ -32,7 +32,7 @@
 		{% endfor %}
 		</table>
 	</div>
-	{% if voters %}
+	{% if voted %}
 	<div class='voters'>
 		<p>Voted</p>
 		<ul>
@@ -41,6 +41,8 @@
 			{% endfor %}
 		</ul>
 	</div>
+	{% endif %}
+	{% if notVoted %}
 	<div class='voters'>
 		<p>Did not vote</p>
 		<ul>
