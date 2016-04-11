@@ -209,6 +209,7 @@ def getCandidates(election):
 		res = cur.fetchall()
 		candidate_name = res[0][0] + " " + res[0][1]
 		candidates.append((int(candidate_id[0]), candidate_name))
+
 	return candidates
 
 #get the number votes for a given candidate in a given election
@@ -219,13 +220,10 @@ def getCandidateVotes(election_id, candidate_id):
 				" %s", [election_id, candidate_id])
 	result = cur.fetchall()
 
-	votes = result[0]
-	return votes
+	return result[0]
 
 #get who did and did not vote in the given election
 #this should be sorted alphabetically
-#if we want to get fancy, we'll do alphabetical, then put the current user at the top
-# --- not getting fancy..
 def getVoters(election_id):
 	voted = []
 	notVoted = []
@@ -235,15 +233,18 @@ def getVoters(election_id):
 	cur.execute("SELECT voter_id FROM voterHistory WHERE election_id = %s AND voted = 1",
 				[election_id])
 	result = cur.fetchall()
+
 	for voter_id in result:
 		cur.execute("SELECT firstname, lastname FROM voters WHERE voter_id = %s", [voter_id])
 		r = cur.fetchall()
 		voter_name = r[0][0] + " " + r[0][1]
 		voted.append(voter_name)
+
 	#get those who didn't vote
 	cur.execute("SELECT voter_id FROM voterHistory WHERE election_id = %s AND voted = 0",
 				[election_id])
 	result2 = cur.fetchall()
+
 	for voter_id in result2:
 		cur.execute("SELECT firstname, lastname FROM voters WHERE voter_id = %s", [voter_id])
 		r = cur.fetchall()
