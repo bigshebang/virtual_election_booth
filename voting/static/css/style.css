@@ -104,3 +104,7 @@ div.voters{
 span.error{
 	color: red !important;
 }
+
+th.title{
+	text-align: center;
+}
