@@ -78,30 +78,33 @@ def vote_page():
 		#when this if statement is true, the election being voted in today is valid
 		if curElection:
 			voted = votedAlready(election, session["id"])
-			if not voted: #make sure they didn't vote yet
-				candidates = getCandidates(curElection)
+			if voted: #make sure they didn't vote yet
+				return render_template("vote.html", logged_in=True, election_happening=curElection,
+									   voted=True)
 
-				error = None
-				result = False
-		    	candidate_id = request.form["candidate"]
-				#user should also put their password in to vote
-				data = {"username" : session["username"], "password" : request.form["password"]}
-				if not tryLogin(data):
-					error = "Invalid password."
-				elif not validCandidateID(curElection, candidate_id): 
-					error = "Invalid candidate ID given. Voter fraud detected - not counting vote."
-				else:
-					result = vote(curElection, candidate_id, userid=session["id"])
+			candidates = getCandidates(curElection)
 
-				if result: #vote is valid
-					return render_template("index.html", logged_in=True, voted=True,
-										   election_happening=curElection)
-				else: #vote is invalid
-					if not error:
-						error = "There was a problem with your vote. Please try again."
+			error = None
+			result = False
+	    	candidate_id = request.form["candidate"]
+			#user should also put their password in to vote
+			data = {"username" : session["username"], "password" : request.form["password"]}
+			if not tryLogin(data):
+				error = "Invalid password."
+			elif not validCandidateID(curElection, candidate_id): 
+				error = "Invalid candidate ID given. Voter fraud detected - not counting vote."
+			else:
+				result = vote(curElection, candidate_id, userid=session["id"])
 
-					return render_template("vote.html", logged_in=True, error=error, voted=False,
-										   election_happening=True)
+			if result: #vote is valid
+				return render_template("index.html", logged_in=True, voted=True,
+									   election_happening=curElection)
+			else: #vote is invalid
+				if not error:
+					error = "There was a problem with your vote. Please try again."
+
+				return render_template("vote.html", logged_in=True, error=error, voted=False,
+									   election_happening=True)
 
 	#there is no election today or they already voted
 	return render_template("vote.html", logged_in=True, election_happening=curElection,
