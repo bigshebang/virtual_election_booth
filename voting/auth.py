@@ -127,7 +127,7 @@ def setupSession(username):
 		pass #some objects don't have regenerate
 
 	#get relevant user data
-	userData = getUserData(session["username"])
+	userData = getUserData(username)
 
 	#put username and other data into session
 	session["username"] = username
