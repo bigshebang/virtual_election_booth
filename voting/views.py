@@ -33,12 +33,14 @@ def election_page():
 		else: #election id isn't a number
 			error = "Election must be a valid number."
 			return render_template("election.html", logged_in=True, prior_elections=prior,
-									show_results=getCurElection(), error=error)
+									error=error, election_happening=getCurElection())
 	else:
 		curElection = getLastElection()
 
 	if curElection:
+		electionName = getElectionName(curElection) #get name of selected/current election
 		candidates = getCandidates(curElection) #get candidates in election
+
 		#get votes for each candidate
 		results = []
 		for cid,c in candidates:
@@ -46,16 +48,16 @@ def election_page():
 			results.append((c, votes))
 
 		voted, notVoted = getVoters(curElection)
-		return render_template("election.html", logged_in=True, show_results=True,
+		return render_template("election.html", logged_in=True, current_election=electionName
 								results=results, voted=voted, notVoted=notVoted,
-								prior_elections=prior)
+								prior_elections=prior, election_happening=getCurElection())
 	else: #election not found, return to home page
 		 #they gave us an id to find a given election but we didn't find it
 		if request.args.get("election"):
 			error = "Election not found."
 		else: #there isn't an election today
 			error = "No election today."
-		return render_template("election.html", logged_in=True, show_results=getCurElection(),
+		return render_template("election.html", logged_in=True, election_happening=getCurElection()
 								error=error, prior_elections=prior)
 
 @views.route("/vote", methods=["GET", "POST"])
@@ -102,14 +104,13 @@ def vote_page():
 					result = vote(curElection, candidate_id, userid=session["id"])
 
 				if result: #vote is valid
-					return render_template("index.html", logged_in=True, voted=True,
-										   election_happening=curElection)
+					return redirect("/")
 				else: #vote is invalid
 					if not error:
 						error = "There was a problem with your vote. Please try again."
 
 					return render_template("vote.html", logged_in=True, error=error, voted=False,
-										   election_happening=True)
+										   election_happening=True, candidates=candidates)
 
 	#there is no election today or they already voted
 	return render_template("vote.html", logged_in=True, election_happening=curElection,
@@ -222,7 +223,6 @@ def getElections():
 def getCandidates(election):
 	#get cursor and data from table
 	cur = db.connection.cursor()
-	# if we want to do ORDER BY we have to use a union or join b\c electionData doesnt have a firstname field
 	# cur.execute("SELECT candidate_id, positio FROM electionData JOIN elections ON electionData.election_id = elections.election_id WHERE electionData.election_id = %s", [election])
 	cur.execute("SELECT candidate_id FROM electionData WHERE election_id = %s", [election])
 	results = cur.fetchall()
@@ -258,9 +258,9 @@ def getVoters(election_id):
 	#get cursor and data from table
 	cur = db.connection.cursor()
 	#get those who voted
-	cur.execute("SELECT firstname,lastname FROM voters WHERE voter_id IN (SELECT voter_id FROM " +
-				"voterHistory WHERE election_id = %s AND voted = 1) ORDER BY firstname,lastname",
-				[election_id])
+	cur.execute("SELECT DISTINCT firstname,lastname FROM voters WHERE voter_id IN (SELECT " +
+				"voter_id FROM voterHistory WHERE election_id = %s AND voted = 1) ORDER BY " +
+				"firstname,lastname", [election_id])
 	result = cur.fetchall()
 
 	for voter in result:
@@ -268,9 +268,9 @@ def getVoters(election_id):
 		voted.append(voter_name)
 
 	#get those who didn't vote
-	cur.execute("SELECT firstname,lastname FROM voters WHERE voter_id NOT IN (SELECT voter_id FROM " +
-				"voterHistory WHERE election_id = %s AND voted = 0) ORDER BY firstname,lastname",
-				[election_id])
+	cur.execute("SELECT DISTINCT firstname,lastname FROM voters WHERE voter_id NOT IN (SELECT " +
+				"voter_id FROM voterHistory WHERE election_id = %s AND voted = 1) ORDER BY " +
+				"firstname,lastname", [election_id])
 	result2 = cur.fetchall()
 
 	for voter in result2:
@@ -279,3 +279,15 @@ def getVoters(election_id):
 
 	#process results from result and result2
 	return voted, notVoted
+
+#given an election id, get and return the name of the election
+def getElectionName(election_id):
+	if election_id.isdigit():
+		cur = db.connection.cursor()
+		cur.execute("SELECT name FROM elections WHERE election_id = %s", [election_id])
+		results = cur.fetchall()
+
+		if len(results) > 0:
+			return results[0]
+
+	return None
