@@ -42,8 +42,7 @@ def register_page():
 		#if successful registration
 		if result:
 			#setup session and bring em back to the home page
-			setupSession(request.form["username"], ssn=request.form["ssn"],
-						 first=request.form["first"], last=request.form["last"])
+			setupSession(request.form["username"])
 			return render_template("index.html", logged_in=True,
 								   election_happening=getCurElection())
 		else: #failed registration
