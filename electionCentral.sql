@@ -57,6 +57,6 @@ CREATE TABLE candidates(
 #remove old user and recreate
 DELETE FROM mysql.user WHERE User = 'ec-dba'@'localhost';
 CREATE USER 'ec-dba'@'localhost' IDENTIFIED BY "mysql:Password!";
-GRANT SELECT,INSERT on ElectionCentral.* TO 'ec-dba'@'localhost';
+GRANT SELECT,INSERT,UPDATE on ElectionCentral.* TO 'ec-dba'@'localhost';
 FLUSH PRIVILEGES;
 
