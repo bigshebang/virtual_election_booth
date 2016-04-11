@@ -21,7 +21,7 @@ def election_page():
 	#get all previous election IDs and names
 	prior = getElections()
 
-	if "prior_election" in request.form.keys():
+	if "prior_election" in request.args.keys():
 		prior_election = request.args.get("prior_election")
 		if validElectionID(prior_election):
 			curElection = prior_election
@@ -175,7 +175,7 @@ def validElectionID(num):
 
 		#make sure value of num references a valid election that has ended
 		cur = db.connection.cursor()
-		cur.execute("SELECT * FROM elections WHERE election_id = %s WHERE end_date < %s",
+		cur.execute("SELECT * FROM elections WHERE election_id = %s AND end_date <= %s",
 					[num, timestamp])
 		result = cur.fetchall()
 
