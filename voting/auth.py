@@ -146,12 +146,12 @@ def getUserData(username):
 	data = {}
 	#get the id/ssn, firstname, lastname.
 	cur = db.connection.cursor()
-	cur.execute("SELECT * FROM voters WHERE username = %s", [username])
+	cur.execute("SELECT ssn,firstname,lastname FROM voters WHERE username = %s", [username])
 	result = cur.fetchall()
 
-	data["id"] = "id"
-	data["first"] = "firstname"
-	data["last"] = "lastname"
+	data["id"] = results[0][0]
+	data["first"] = results[0][1]
+	data["last"] = results[0][2]
 	return data
 
 #validate an SSN. return True if valid and False if not
@@ -269,6 +269,7 @@ def validAddress(address):
 			space += 1
 		if letters >= 1 and numbers >= 1 and space >= 1:
 			return True
+
 	return False
 
 #make sure phone number is in the valid XXX-XXX-XXXX format
