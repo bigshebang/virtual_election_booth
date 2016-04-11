@@ -9,7 +9,8 @@ mutex = Lock()
 @views.route("/", methods=["GET"])
 def home():
 	election_happening = getCurElection()
-	return render_template("index.html", logged_in=loggedIn(),
+	voted = votedAlready(election_happening, session["id"], db.connection.cursor())
+	return render_template("index.html", logged_in=loggedIn(), voted=voted,
 						   election_happening=election_happening)
 
 @views.route("/election", methods=["GET"])
