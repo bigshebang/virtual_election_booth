@@ -26,6 +26,7 @@ def election_page():
 	#get all previous election IDs and names
 	prior = getElections()
 
+	#if user has requested a certain election
 	if "prior_election" in request.args.keys():
 		prior_election = request.args.get("prior_election")
 		if validElectionID(prior_election):
@@ -48,7 +49,7 @@ def election_page():
 			results.append((c, votes))
 
 		voted, notVoted = getVoters(curElection)
-		return render_template("election.html", logged_in=True, current_election=electionName
+		return render_template("election.html", logged_in=True, current_election=electionName,
 								results=results, voted=voted, notVoted=notVoted,
 								prior_elections=prior, election_happening=getCurElection())
 	else: #election not found, return to home page
@@ -57,8 +58,9 @@ def election_page():
 			error = "Election not found."
 		else: #there isn't an election today
 			error = "No election today."
-		return render_template("election.html", logged_in=True, election_happening=getCurElection()
-								error=error, prior_elections=prior)
+
+		return render_template("election.html", logged_in=True, error=error,
+							   election_happening=getCurElection(), prior_elections=prior)
 
 @views.route("/vote", methods=["GET", "POST"])
 def vote_page():
@@ -288,6 +290,6 @@ def getElectionName(election_id):
 		results = cur.fetchall()
 
 		if len(results) > 0:
-			return results[0]
+			return results[0][0]
 
 	return None
