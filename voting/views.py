@@ -57,10 +57,14 @@ def vote_page():
 	if not loggedIn(): #not logged in, make em register
 		return redirect("/register")
 
+	#setup voted variable
+	voted = False
+
 	if request.method == "GET":
 		curElection = getCurElection()
 		if curElection:
-			if not votedAlready(curElection, session["id"]): #didn't vote yet
+			voted = votedAlready(curElection, session["id"])
+			if not voted: #didn't vote yet
 				candidates = getCandidates(curElection)
 				return render_template("vote.html", logged_in=True, election_happening=True,
 										listLen=len(candidates), ticket=candidates, voted=False)
@@ -73,7 +77,8 @@ def vote_page():
 
 		#when this if statement is true, the election being voted in today is valid
 		if curElection:
-			if not votedAlready(election, session["id"]): #make sure they didn't vote yet
+			voted = votedAlready(election, session["id"])
+			if not voted: #make sure they didn't vote yet
 				candidates = getCandidates(curElection)
 
 				error = None
@@ -98,9 +103,9 @@ def vote_page():
 					return render_template("vote.html", logged_in=True, error=error, voted=False
 										   election_happening=True)
 
-	#there is no election today
-	return render_template("vote.html", logged_in=True, election_happening=True,
-						   voted=True)
+	#there is no election today or they already voted
+	return render_template("vote.html", logged_in=True, election_happening=curElection,
+						   voted=voted)
 
 #perform the vote by updating database. return true if successful, false if not
 def vote(election, candidate=None, voted=True, userid=""):
