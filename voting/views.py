@@ -9,7 +9,8 @@ mutex = Lock()
 @views.route("/", methods=["GET"])
 def home():
 	election_happening = getCurElection()
-	return render_template("index.html", logged_in=loggedIn(), election_happening=election_happening)
+	return render_template("index.html", logged_in=loggedIn(),
+						   election_happening=election_happening)
 
 @views.route("/election", methods=["GET"])
 def election_page():
@@ -82,12 +83,14 @@ def vote_page():
 				result = vote(curElection, candidate_id, userid=session["id"])
 
 			if result: #vote is valid
-				return render_template("index.html", logged_in=True, voted=True, election_happening=curElection) 
+				return render_template("index.html", logged_in=True, voted=True,
+									   election_happening=curElection) 
 			else: #vote is invalid
 				if not error:
 					error = "There was a problem with your vote. Please try again."
 
-				return render_template("vote.html", logged_in=True, error=error, election_happening=True)
+				return render_template("vote.html", logged_in=True, error=error,
+									   election_happening=True)
 
 	#there is no election today
 	return render_template("vote.html", logged_in=True, show_results=False)
@@ -166,7 +169,8 @@ def validCandidateID(election, candidate):
 		#if we just keep real candidate id throughout everything, we shouldn't need this and
 		#everything else should be easier
 		cur = db.connection.cursor()
-		cur.execute("SELECT * FROM electionData WHERE election_id = %s and candidate_id = %s", [election, candidate])
+		cur.execute("SELECT * FROM electionData WHERE election_id = %s and candidate_id = %s",
+					[election, candidate])
 		result = cur.fetchall()
 		if result:
 			return True
@@ -194,13 +198,14 @@ def getElections():
 def getCandidates(election):
 	#get cursor and data from table
 	cur = db.connection.cursor()
-	# if we want to do ORDER BY we have to use a union or join b\c electionData doesnt have a firstname field 
+	# if we want to do ORDER BY we have to use a union or join b\c electionData doesnt have a firstname field
 	# cur.execute("SELECT candidate_id, positio FROM electionData JOIN elections ON electionData.election_id = elections.election_id WHERE electionData.election_id = %s", [election])
 	cur.execute("SELECT candidate_id FROM electionData WHERE election_id = %s", [election])
 	results = cur.fetchall()
 	candidates = []
 	for candidate_id in results:
-		cur.execute("SELECT firstname, lastname FROM candidates WHERE candidate_id = %s", [candidate_id])
+		cur.execute("SELECT firstname, lastname FROM candidates WHERE candidate_id = %s",
+					[candidate_id])
 		res = cur.fetchall()
 		candidate_name = res[0][0] + " " + res[0][1]
 		candidates.append((int(candidate_id[0]), candidate_name))
@@ -227,7 +232,8 @@ def getVoters(election_id):
 	#get cursor and data from table
 	cur = db.connection.cursor()
 	#get those who voted
-	cur.execute("SELECT voter_id FROM voterHistory WHERE election_id = %s AND voted = 1", [election_id])
+	cur.execute("SELECT voter_id FROM voterHistory WHERE election_id = %s AND voted = 1",
+				[election_id])
 	result = cur.fetchall()
 	for voter_id in result:
 		cur.execute("SELECT firstname, lastname FROM voters WHERE voter_id = %s", [voter_id])
@@ -235,7 +241,8 @@ def getVoters(election_id):
 		voter_name = r[0][0] + " " + r[0][1]
 		voted.append(voter_name)
 	#get those who didn't vote
-	cur.execute("SELECT voter_id FROM voterHistory WHERE election_id = %s AND voted = 0", [election_id])
+	cur.execute("SELECT voter_id FROM voterHistory WHERE election_id = %s AND voted = 0",
+				[election_id])
 	result2 = cur.fetchall()
 	for voter_id in result2:
 		cur.execute("SELECT firstname, lastname FROM voters WHERE voter_id = %s", [voter_id])
