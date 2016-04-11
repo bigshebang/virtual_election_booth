@@ -77,7 +77,7 @@ def vote_page():
 
 		#when this if statement is true, the election being voted in today is valid
 		if curElection:
-			voted = votedAlready(election, session["id"])
+			voted = votedAlready(curElection, session["id"])
 			if not voted: #make sure they didn't vote yet
 				candidates = getCandidates(curElection)
 
