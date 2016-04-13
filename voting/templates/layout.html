@@ -12,7 +12,13 @@
 				<ul class='main-nav'>
 					<li {% block home_active %}{% endblock %}><a href='/'>Home</a></li>
 					{% if election_happening and logged_in %}
-					<li {% block vote_active %}{% endblock %}><a href='vote'>Vote</a></li>
+					<li {% block vote_active %}{% endblock %}>
+						{% if voted %}
+						Vote
+						{% else %}
+						<a href='vote'>Vote</a>
+						{% endif %}
+					</li>
 					{% elif not logged_in %}
 					<li {% block regi_active %}{% endblock %}><a href='register'>Register</a></li>
 					{% endif %}
