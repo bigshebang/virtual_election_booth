@@ -38,6 +38,19 @@ def getLastElection():
 
 	return None
 
+#check if a given user voted in a given election already
+def votedAlready(election, userid):
+	cur = db.connection.cursor()
+	cur.execute("SELECT * FROM voterHistory WHERE election_id = %s AND voter_id = %s",
+				[election, userid])
+	result = cur.fetchall()
+
+	#they have voted before in this election bc they exist in the electionHistory table
+	if len(result) > 0:
+		return True
+
+	return False
+
 #get the current time in unix timestamp
 def getCurTime():
 	return time.time()

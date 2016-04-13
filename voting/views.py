@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, abort, session, Blueprint
 # from flask.ext.mysqldb import MySQL
 from threading import Lock
-from voting.utils import loggedIn, getCurElection, getLastElection, tryLogin, getDBTimestamp, getUnixTimestamp, db, getCurTime
+from voting.utils import loggedIn, getCurElection, getLastElection, tryLogin, getDBTimestamp, getUnixTimestamp, db, getCurTime, votedAlready
 
 views = Blueprint('views', __name__)
 mutex = Lock()
@@ -159,19 +159,6 @@ def vote(election, candidate=None, voted=True, userid=""):
 		raise
 	finally: #no matter what, release mutex
 		mutex.release()
-
-	return False
-
-#check if a given user voted in a given election already
-def votedAlready(election, userid):
-	cur = db.connection.cursor()
-	cur.execute("SELECT * FROM voterHistory WHERE election_id = %s AND voter_id = %s",
-				[election, userid])
-	result = cur.fetchall()
-
-	#they have voted before in this election bc they exist in the electionHistory table
-	if len(result) > 0:
-		return True
 
 	return False
 

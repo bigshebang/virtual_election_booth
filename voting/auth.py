@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, abort, session, Blueprint
 import re
-from voting.utils import loggedIn, getCurElection, validAge, db, tryLogin, hashPass
+from voting.utils import loggedIn, getCurElection, validAge, db, tryLogin, hashPass, votedAlready
 
 auth = Blueprint('auth', __name__)
 
