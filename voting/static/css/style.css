@@ -105,6 +105,8 @@ span.error{
 	color: red !important;
 }
 
-th.title{
+#cur-election-container{
 	text-align: center;
+	margin-top: 15px;
 }
+

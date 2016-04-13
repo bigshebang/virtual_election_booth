@@ -15,6 +15,11 @@
 		</form>
 	</div>
 	{% endif %}
+	{% if current_election %}
+	<div id="cur-election-container">
+		<h1 class='title'>{{ current_election }}</h1>
+	</div>
+	{% endif %}
 	<div class='results'>
 		<table>
 			{% if current_election %}
