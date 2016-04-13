@@ -102,6 +102,6 @@
 			</form>
 		</div>
 	{% else %}
-		<script>alert('You are already registered');history.back();</script>
+		<script>alert('You are already registered');location.assign("/");</script>
 	{% endif %}
 {% endblock %}
