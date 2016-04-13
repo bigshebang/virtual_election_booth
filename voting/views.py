@@ -102,6 +102,7 @@ def vote_page():
 					error = "Invalid password."
 				elif not validCandidateID(curElection, candidate_id): 
 					error = "Invalid candidate ID given. Voter fraud detected - not counting vote."
+					voted = True
 				else:
 					result = vote(curElection, candidate_id, userid=session["id"])
 
@@ -111,8 +112,8 @@ def vote_page():
 					if not error:
 						error = "There was a problem with your vote. Please try again."
 
-					return render_template("vote.html", logged_in=True, error=error, voted=False,
-										   election_happening=True, candidates=candidates,
+					return render_template("vote.html", logged_in=True, error=error, voted=voted,
+										   election_happening=True, ticket=candidates,
 										   listLen=len(candidates))
 
 	#there is no election today or they already voted
