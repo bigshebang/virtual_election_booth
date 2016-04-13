@@ -13,7 +13,7 @@ def register_page():
 	curElection = getCurElection() #get today's election
 
 	if request.method == "GET":
-		return render_template("register.html", logged_in=False, show_results=curElection)
+		return render_template("register.html", logged_in=False)
 	elif request.method == "POST":
 		#validate POST data
 		error = None
@@ -43,22 +43,18 @@ def register_page():
 		if result:
 			#setup session and bring em back to the home page
 			setupSession(request.form["username"])
-			return render_template("index.html", logged_in=True,
-								   election_happening=getCurElection())
+			return redirect("/")
 		else: #failed registration
 			if not error:
 				error = "Registration failed. Please try again."
 
-			return render_template("register.html", error=error, logged_in=False,
-								   show_results=curElection)
+			return render_template("register.html", error=error, logged_in=False)
 
 @auth.route("/", methods=["POST"])
 def login():
 	#if user is logged in already, just send them to the home page
 	if loggedIn():
 		return redirect("/")
-
-	curElection = getCurElection() #get today's election
 
 	#validate POST data
 	error = None
@@ -73,8 +69,10 @@ def login():
 	if result: #valid login
 		#get and setup various session data
 		setupSession(request.form["username"])
-		# check if voted!!!	
-		return render_template("index.html", logged_in=True, election_happening=curElection)
+		curElection = getCurElection() #get today's election
+		voted = votedAlready(election_happening, session["id"])
+		return render_template("index.html", logged_in=True, election_happening=curElection,
+							    voted=voted)
 	else: #failed login
 		if not error:
 			error = "Invalid username/password combination. Try again."
