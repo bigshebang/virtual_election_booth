@@ -112,7 +112,8 @@ def vote_page():
 						error = "There was a problem with your vote. Please try again."
 
 					return render_template("vote.html", logged_in=True, error=error, voted=False,
-										   election_happening=True, candidates=candidates)
+										   election_happening=True, candidates=candidates,
+										   listLen=len(candidates))
 
 	#there is no election today or they already voted
 	return render_template("vote.html", logged_in=True, election_happening=curElection,
