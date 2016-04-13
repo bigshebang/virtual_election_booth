@@ -164,6 +164,7 @@ def validSSN(ssn):
 	return False
 
 #what is our policy for this? letters, numbers. then one underscore and/or dash?
+#allow numbers also
 #also do a database check to make sure the username isn't taken
 def validUsername(user):
 	if user:
@@ -172,7 +173,9 @@ def validUsername(user):
 		letters = 0
 		for c in user:
 			charNum = ord(c)
-			if c == "-":
+			if c.isdigit():
+				pass
+			elif c == "-":
 				dash += 1
 			elif c == "_":
 				underscore += 1
