@@ -19,7 +19,7 @@ def register_page():
 		error = None
 		result = False
 		if not validUsername(request.form['username']):
-			error = "You must supply a valid username. (no special characters, no spaces, up to 1 dash and/or underscore, at least 1 letter, not blank)"
+			error = "You must supply a valid username. (no duplicates, no special characters, no spaces, up to 1 dash and/or underscore, at least 1 letter, not blank)"
 		elif not validPass(request.form['password']):
 			error = "Password is invalid. (upper, lower, number, min 8 chars)"
 		elif request.form['password'] != request.form['password2']:
@@ -29,13 +29,13 @@ def register_page():
 		elif not validLast(request.form['last']):
 			error = "You must supply a valid last name. (no numbers, no special characters, not blank)"
 		elif not validBirthday(request.form['birthday']):
-			error = "You must supply a valid date of birth."
+			error = "You must be 18 years or older to vote."
 		elif not validAddress(request.form['address']):
 			error = "You must supply a valid address. (### street) "
 		elif not validPhoneNumber(request.form['number']):
 			error = "You must supply a valid phone number.(###-###-####)"
 		elif not validSSN(request.form['ssn']):
-			error = "You must supply a valid Social Security Number. (XXX-XX-XXXX)"
+			error = "You must supply a valid Social Security Number, no duplicates.(XXX-XX-XXXX)"
 		else:
 			result = registerUser(request.form)
 
