@@ -70,7 +70,10 @@ def login():
 		#get and setup various session data
 		setupSession(request.form["username"])
 		curElection = getCurElection() #get today's election
-		voted = votedAlready(curElection, session["id"])
+		if curElection:
+			voted = votedAlready(curElection, session["id"])
+		else:
+			voted = False
 		return render_template("index.html", logged_in=True, election_happening=curElection,
 							    voted=voted)
 	else: #failed login
